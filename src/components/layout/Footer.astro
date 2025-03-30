@@ -1,6 +1,7 @@
 ---
 import { menuLinks, siteConfig } from "@/site.config";
 
+const start = 2024;
 const year = new Date().getFullYear();
 ---
 
@@ -11,7 +12,7 @@ const year = new Date().getFullYear();
 		&copy; {siteConfig.author}
 		<!-- 修改 -->
 		<!-- {year}.<span class="inline-block">&nbsp;🚀&nbsp;Astro Cactus</span> -->
-		{year}
+		{start}-{year}
 	</div>
 	<nav
 		aria-label="More on this site"
