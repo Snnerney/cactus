@@ -3,7 +3,8 @@ title: blog-migration
 description: notionNext -> astro + cactus
 publishDate: 2025-03-30T17:18
 ---
-## 博客迁移
+## 博客迁移 
+### NotionNext -> Astro + Cactus
 
 之前逛个人博客的时候看到这个框架主题，很心动，界面简洁 速度也快
 所以开始嫌弃notionnext的笨重（样式太多了，加上主页图片的渲染也要花上一段时间\[图床用的是github，国内访问有时加载不出来，后续打算换成cf]，看久了很腻）
