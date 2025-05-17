@@ -31,8 +31,8 @@ export const menuLinks: { path: string; title: string }[] = [
 		title: "主页",
 	},
 	{
-		path: "/about/",
-		title: "关于",
+		path: "/tags",
+		title: "标签",
 	},
 	{
 		path: "/posts/",
@@ -45,7 +45,11 @@ export const menuLinks: { path: string; title: string }[] = [
 	{
 		path: "/link/",
 		title: "友链",
-	}
+	},
+	{
+		path: "/about/",
+		title: "关于",
+	},
 ];
 
 // https://expressive-code.com/reference/configuration/
