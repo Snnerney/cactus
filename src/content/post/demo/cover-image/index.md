@@ -44,3 +44,5 @@ ogImage: "/social-card.avif"
 显示：
 
 ![Astro build wallpaper](./cover.png)
+
+![Junimo](../../../../../public/assets/images/Junimo.gif)
