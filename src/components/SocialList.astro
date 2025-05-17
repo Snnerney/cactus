@@ -7,6 +7,7 @@ interface SocialLink {
     link: string;
     name: string;
     type?: 'social' | 'friend';
+    description?: string;
 }
 
 const socialLinks: SocialLink[] = [
@@ -35,7 +36,8 @@ const friendLinks: SocialLink[] = [
         friendlyName: "f1",
         link: "https://www.qqwx.de/",
         name: "f1",
-        type: 'friend'
+        type: 'friend',
+        description: "A blog about life and code."
     },
     {
         friendlyName: "homepage",
@@ -46,36 +48,14 @@ const friendLinks: SocialLink[] = [
 
 ];
 ---
+<div class="mt-8 flex min-h-[64px] flex-col gap-y-8">
 
-<div class="mt-8 flex min-h-[64px] flex-col gap-y-4">
-    <div class="flex flex-wrap items-end justify-end gap-x-2 text-right">
-        <ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
-            {socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
-                <li class="h-8 w-8 flex items-center justify-center">
-                    <a
-                        class="inline-flex h-full w-full items-center justify-center sm:hover:text-link"
-                        href={link}
-                        rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
-                        target="_blank"
-                    >
-                        <Icon 
-                            aria-hidden="true" 
-                            class="h-full w-full" 
-                            focusable="false" 
-                            name={name} 
-                        />
-                        <span class="sr-only">{friendlyName}</span>
-                    </a>
-                </li>
-            ))}
-        </ul>
-    </div>
-
-    {friendLinks.length > 0 && (
-        <div class="flex flex-wrap items-end justify-end gap-x-2 text-right">
-            <p class="w-full text-right font-bold text-gray-600">Friend</p>
-            <ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
-                {friendLinks.map(({ friendlyName, isWebmention, link, name }) => (
+    <!-- 社交链接区块 -->
+    {socialLinks.length > 0 && (
+        <div class="flex flex-col items-start gap-y-2 text-left">
+            <p class="text-lg font-bold text-gray-600">Social</p>
+            <ul class="flex flex-wrap items-center gap-3">
+                {socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
                     <li class="h-8 w-8 flex items-center justify-center">
                         <a
                             class="inline-flex h-full w-full items-center justify-center sm:hover:text-link"
@@ -91,6 +71,40 @@ const friendLinks: SocialLink[] = [
                             />
                             <span class="sr-only">{friendlyName}</span>
                         </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )}
+
+    <!-- 友链链接区块 -->
+    {friendLinks.length > 0 && (
+        <div class="flex flex-col items-start gap-y-2 text-left">
+            <p class="text-lg font-bold text-gray-600">Friends</p>
+            <ul class="flex flex-col gap-y-2">
+                {friendLinks.map(({ friendlyName, isWebmention, link, name, description }) => (
+                    <li class="flex items-start gap-x-3 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
+                        <div class="h-8 w-8 flex-shrink-0">
+                            <Icon 
+                                aria-hidden="true" 
+                                class="h-full w-full text-gray-700" 
+                                focusable="false" 
+                                name={name} 
+                            />
+                        </div>
+                        <div>
+                            <a
+                                class="text-link font-semibold hover:underline"
+                                href={link}
+                                rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
+                                target="_blank"
+                            >
+                                {friendlyName}
+                            </a>
+                            {description && (
+                                <p class="text-sm text-gray-500">{description}</p>
+                            )}
+                        </div>
                     </li>
                 ))}
             </ul>
