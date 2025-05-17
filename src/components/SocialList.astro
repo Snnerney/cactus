@@ -33,17 +33,17 @@ const socialLinks: SocialLink[] = [
 
 const friendLinks: SocialLink[] = [
    {
-        friendlyName: "f1",
+        friendlyName: "Faust",
         link: "https://www.qqwx.de/",
         name: "f1",
         type: 'friend',
-        description: "A blog about life and code."
     },
     {
         friendlyName: "homepage",
         link: "https://noospic.me",
         name: "homepage",
-        type: 'friend'
+        type: 'friend',
+        description: 'my homepage'
     },
 
 ];
@@ -53,7 +53,7 @@ const friendLinks: SocialLink[] = [
     <!-- 社交链接区块 -->
     {socialLinks.length > 0 && (
         <div class="flex flex-col items-start gap-y-2 text-left">
-            <p class="text-lg font-bold text-gray-600">Social</p>
+            <p class="text-lg font-bold text-gray-600">Communities</p>
             <ul class="flex flex-wrap items-center gap-3">
                 {socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
                     <li class="h-8 w-8 flex items-center justify-center">
