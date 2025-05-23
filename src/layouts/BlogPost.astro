@@ -39,6 +39,12 @@ const { headings } = await render(post);
 				<slot />
 				<WebMentions />
 			</div>
+
+  <!-- 评论放在这里 -->
+  <div class="mt-16 max-w-2xl mx-auto border-t pt-8 not-prose">
+    <h2 class="text-2xl font-bold mb-6 text-accent-2">评论</h2>
+    <Comment />
+  </div>
 		</article>
 	</div>
 	<button
@@ -62,9 +68,6 @@ const { headings } = await render(post);
 
 
 </BaseLayout>
-
-<!-- 引入评论组件 -->
-<Comment />
 
 
 <script>
