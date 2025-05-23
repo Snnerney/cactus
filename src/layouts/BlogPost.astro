@@ -38,6 +38,8 @@ const { headings } = await render(post);
 			>
 				<slot />
 				<WebMentions />
+				<!-- 引入评论组件 -->
+                <Comment />
 			</div>
 		</article>
 	</div>
@@ -60,8 +62,7 @@ const { headings } = await render(post);
 		</svg>
 	</button>
 
-	<!-- 引入评论组件 -->
-    <Comment />
+
 </BaseLayout>
 
 
