@@ -59,10 +59,12 @@ const { headings } = await render(post);
 			<path d="M4.5 15.75l7.5-7.5 7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
 		</svg>
 	</button>
+
+	<!-- 引入评论组件 -->
+    <Comment />
 </BaseLayout>
 
-<!-- 引入评论组件 -->
-<Comment />
+
 
 <script>
 	const scrollBtn = document.getElementById("to-top-btn") as HTMLButtonElement;
