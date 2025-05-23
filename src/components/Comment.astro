@@ -1,26 +1,33 @@
-<div id="tcomment"></div>
+---
+// Comment.astro
+---
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    function loadTwikoo() {
-      const commentsContainer = document.getElementById('tcomment');
-      if (commentsContainer) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.staticfile.org/twikoo/1.6.32/twikoo.all.min.js';
-        script.async = true;
-        script.onload = () => {
-          const initScript = document.createElement('script');
-          initScript.innerHTML = `
-            twikoo.init({
-                envId: 'https://comment.antiss.me/.netlify/functions/twikoo',
-                el: '#tcomment',
-            });
-        `;
-          document.body.appendChild(initScript);
-        };
-        document.body.appendChild(script);
-      }
-    }
+<div id="tcomment" class="mt-8" />
+
+<script is:inline>
+  function loadTwikoo() {
+    if (window.twikoo || document.getElementById('twikoo-js')) return;
+
+    const script = document.createElement('script');
+    script.id = 'twikoo-js';
+    script.src = 'https://cdn.staticfile.org/twikoo/1.6.32/twikoo.all.min.js';
+    script.onload = () => {
+      window.twikoo.init({
+        envId: 'https://comment.antiss.me/.netlify/functions/twikoo',
+        el: '#tcomment',
+        lang: 'zh-CN',
+        theme: 'auto'
+      });
+    };
+    document.body.appendChild(script);
+  }
+
+  if (document.readyState !== 'loading') {
     loadTwikoo();
-  });
+  } else {
+    document.addEventListener('DOMContentLoaded', loadTwikoo);
+  }
+
+  // Astro 页内路由支持
+  document.addEventListener('astro:page-load', loadTwikoo);
 </script>
