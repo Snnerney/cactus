@@ -1,5 +1,5 @@
 ---
-title: how-to-find-answer-quickly
+title: 如何快速找到需要的资源or解决方案
 description: 如何快速找到答案
 publishDate: 2025-03-30
 ogImage: /social-card.avif

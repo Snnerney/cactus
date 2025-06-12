@@ -3,7 +3,7 @@ title: ai-不完全白嫖指南
 description: ai-不完全白嫖指南 | 具有时效性，更新日期3/25/2025
 publishDate: 2025-03-25
 tags:
-  - ai
+  - llm
 ogImage: /social-card.avif
 ---
 ## 1.DeepSeek V3 0324
@@ -47,10 +47,10 @@ Gemini 模型有*预览版*和*稳定版*两种版本。
 - [ai studio](https://aistudio.google.com/)
 
 ## 4.ChatGPT
-- 官网/官方API（太贵了）/官转or逆向API
+- 官网/官方API（~~expensive~~）/官转or逆向API
 
 ## 5.Claude
-- 官网（不支持大陆手机号|需要接码，额度也少🥲，但代码能力强）
+- 官网（不支持大陆手机号|需接码，额度也少🥲，但代码能力强）
 - 其他提供api的平台（OpenRouter）自费购买
 - cursor等代码辅助工具（疑似降智）
 

@@ -3,7 +3,7 @@ title: share-proxy
 description: 代理共享
 publishDate: 2025-03-31
 tags:
-  - vpn
+  - proxy
 ogImage: /social-card.avif
 ---
 我的需求： 一台主力机(荣耀)和备用机(Redmi)，均为Android，让有代理条件的设备共享代理给其他设备

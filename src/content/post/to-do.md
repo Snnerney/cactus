@@ -53,5 +53,5 @@ localhostForwarding=true
 ### 5. VPS配置
 > ps:可重复参考
 
-[服务器安全设置](https://blog.laoda.de/archives/how-to-secure-a-linux-server) 
+- [x] [服务器安全设置](https://blog.laoda.de/archives/how-to-secure-a-linux-server)  only setting on vps-do
 

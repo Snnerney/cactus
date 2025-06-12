@@ -3,7 +3,7 @@ title: docker项目-moments
 description: 有趣的Docker项目
 publishDate: 2025-04-21
 tags:
-  - Docker
+  - docker
 ogImage: /social-card.avif
 ---
 之前docker部署了一个朋友圈项目-moments，但是还没绑自定义域名和上传ssl证书，vps不关机ip不变所有直接在cf上添加了一条A记录指向了vps ip
@@ -26,6 +26,8 @@ ogImage: /social-card.avif
 
 ---
 
-之前部署在claw cloud中的new-api也只能http访问，根据官网文档[doc-自定义域证书](https://docs.run.claw.cloud/clawcloud-run/guide/app-launchpad/custom-domain-certificates) 中可以手动上传ssl证书，crt和key同样也可以使用cf的证书
+之前部署在claw cloud中的new-api也只能http访问，根据官网文档[doc-自定义域证书](https://docs.run.claw.cloud/clawcloud-run/guide/app-launchpad/custom-domain-certificates) 中可以手动上传ssl证书，crt和key同样也可以使用cf的
+
+证书
 
 另记一则：在使用vim时粘贴内容总是会出现缩进错乱的问题 -> 解决方案：`:set paste` 进入粘贴模式，不过好像还是会出现代码丢失的情况...
