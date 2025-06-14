@@ -6,7 +6,7 @@ tags:
   - llm
 ogImage: /social-card.avif
 ---
-在国内无法直接调用.../oai/Gemini/Claude-API，所以可以采用代理.../oai/Gemini/ClaudeGemini的方式来调用 **OR** 自部署中转站点如：`new-api`等
+在国内直连环境下无法直接调用.../oai/Gemini/Claude-API，所以可以采用代理.../oai/Gemini/Claude API的方式来调用 **OR** 自部署中转站点如：`new-api`等
 
 1. 注册/登录 Deno
 2. 创建新项目
