@@ -4,7 +4,7 @@ description: 与生活息息相关的计算机网络原理
 publishDate: 2025-06-19
 tags:
   - study
-  ogImage: /social-card.avif
+ogImage: /social-card.avif
 ---
 
 > just for recording the note of computer-network, to be added
