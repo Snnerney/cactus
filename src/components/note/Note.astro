@@ -40,10 +40,28 @@ const { Content } = await render(note);
 		}}
 		date={note.data.publishDate}
 	/>
+	{note.data.music && <div id="aplayer" class="mb-4"></div>}
 	<div
 		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
 		class:list={{ "line-clamp-6": isPreview }}
 	>
 		<Content />
 	</div>
+	{note.data.music && (
+  <>
+    <script type="application/json" id="music-data">{JSON.stringify(note.data.music)}</script>
+    <script>
+      const musicData = document.getElementById('music-data');
+      if (musicData) {
+        const music = JSON.parse(musicData.textContent);
+        if (music && typeof window !== "undefined" && window.APlayer) {
+          new window.APlayer({
+            container: document.getElementById('aplayer'),
+            audio: [music]
+          });
+        }
+      }
+    </script>
+  </>
+)}
 </article>
