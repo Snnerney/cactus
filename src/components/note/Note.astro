@@ -40,7 +40,9 @@ const { Content } = await render(note);
 		}}
 		date={note.data.publishDate}
 	/>
-	{note.data.music && <div id="aplayer" class="mb-4"></div>}
+	<div id="aplayer" class="mb-4"></div>
+		<div id="aplayer"></div>
+	
 	<div
 		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
 		class:list={{ "line-clamp-6": isPreview }}
@@ -50,18 +52,15 @@ const { Content } = await render(note);
 	
 </article>
 
-<script>
-	if (typeof window !== "undefined" && window.APlayer) {
-    new window.APlayer({
-    container: document.getElementById('aplayer'),
-    audio: [
-        {
-            name: '半岛铁盒',
-            artist: 'jl',
-            url: 'https://echeverra.cn/wp-content/uploads/2022/05/周杰伦-半岛铁盒.mp3',
-            cover: 'https://echeverra.cn/wp-content/uploads/2022/05/周杰伦-半岛铁盒.mp3-image.png'
-        }
-        ]
-       });
-     }
-</script>
+{note.data.music && (
+	<script>
+		if (typeof window !== "undefined" && window.APlayer) {
+			new window.APlayer({
+				container: document.getElementById('aplayer'),
+				audio: [
+					note.data.music
+				]
+			});
+		}
+	</script>
+)}
