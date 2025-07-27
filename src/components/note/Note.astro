@@ -47,21 +47,19 @@ const { Content } = await render(note);
 	>
 		<Content />
 	</div>
-	{note.data.music && (
-  <>
-    <script type="application/json" id="music-data">{JSON.stringify(note.data.music)}</script>
-    <script>
-      const musicData = document.getElementById('music-data');
-      if (musicData) {
-        const music = JSON.parse(musicData.textContent);
-        if (music && typeof window !== "undefined" && window.APlayer) {
-          new window.APlayer({
-            container: document.getElementById('aplayer'),
-            audio: [music]
-          });
-        }
-      }
-    </script>
-  </>
-)}
+	
 </article>
+
+	if (typeof window !== "undefined" && window.APlayer) {
+    new window.APlayer({
+    container: document.getElementById('aplayer'),
+    audio: [
+        {
+            name: '半岛铁盒',
+            artist: 'jl',
+            url: 'https://echeverra.cn/wp-content/uploads/2022/05/周杰伦-半岛铁盒.mp3',
+            cover: 'https://echeverra.cn/wp-content/uploads/2022/05/周杰伦-半岛铁盒.mp3-image.png'
+        }
+        ]
+       });
+     }
