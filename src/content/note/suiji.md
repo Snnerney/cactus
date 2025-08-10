@@ -2,10 +2,8 @@
 title: 随记
 description: 随记
 publishDate: 2025-08-11T01:28
-
 ---
-
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=420 height=86 src="//music.163.com/outchain/player?type=2&id=408055956&auto=1&height=66"></iframe>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=300 height=86 src="https://music.163.com/outchain/player?type=2&id=408055956&auto=1&height=66"></iframe>
 
 好久没玩星露谷了 ~~我好想种地啊wwwwwww~~
 
@@ -16,4 +14,3 @@ publishDate: 2025-08-11T01:28
 <img src="https://linux.do/uploads/default/original/4X/5/1/3/5133caec53165ccc0ec1167ea0cc9aa311aa27cd.jpeg" alt="Gx77TsxWMAAPfkx" style="zoom: 15%;" />
 
 -- （图在x主页刷到的，感觉很温馨hh）- pic from https://x.com/lavendel080/status/1954275658370032045
-
