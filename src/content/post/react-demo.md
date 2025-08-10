@@ -9,6 +9,18 @@ ogImage: /social-card.avif
 
 just for copy 
 
+front-course-Udemy
+
+[html+css](https://www.bilibili.com/video/BV1A34y1e7wL/?spm_id_from=333.1387.search.video_card.click&vd_source=c56f6e876183507cbb1bfdd8fb305472)
+
+[js](https://www.bilibili.com/video/BV1vA4y197C7?spm_id_from=333.788.videopod.episodes&vd_source=c56f6e876183507cbb1bfdd8fb305472&p=20) | [repo](https://github.com/jonasschmedtmann/complete-javascript-course)
+
+[react](https://www.bilibili.com/video/BV11M4m1z72h/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c56f6e876183507cbb1bfdd8fb305472)
+
+----
+
+
+
 速通一下react （仅有简单的html基础，js了解浅薄，css更不用说，基本不会用，之前只跟视频用过vue
 
 tsx类似于jsx
@@ -380,7 +392,7 @@ function ShoppingList() {
             </div>
           );
         }
-
+        
         // App.jsx (父组件)
         function App() {
           return (
@@ -442,14 +454,14 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         // 假设初始 count = 0
         function MyComponent() {
           const [count, setCount] = useState(0);
-
+        
           const handleClick = () => {
             setCount(count + 1); // 此时 count 仍然是 0
             setCount(count + 1); // 此时 count 仍然是 0，结果 count 最终会是 1 (因为两次都基于 0 + 1)
             // React 会将这两个更新批处理，最终 count 会变成 1。
             console.log(count); // 仍然是旧值 0
           };
-
+        
           return <button onClick={handleClick}>{count}</button>;
         }
         ```
@@ -459,7 +471,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         // 正确的递增方式
         setCount(prevCount => prevCount + 1); // 推荐
         setCount(prevCount => prevCount + 1); // 第二次调用会基于第一次更新后的值
-
+        
         // 使用函数式更新，最终 count 会是 2
         ```
 *   **不可变性 (Immutability) 在 State 中的重要性：**
@@ -472,16 +484,16 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         ```jsx
         function ListEditor() {
           const [items, setItems] = useState(['Apple', 'Banana']);
-
+        
           const addItem = () => {
             // 错误：直接修改原数组
             // items.push('Orange');
             // setItems(items); // ❌ 这样可能不会触发更新，或者行为异常
-
+        
             // 正确：创建一个新数组
             setItems(prevItems => [...prevItems, 'Orange']);
           };
-
+        
           const updateFirstItem = () => {
             // 正确：创建一个新数组，其中包含更新后的第一个元素
             setItems(prevItems => [
@@ -491,7 +503,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
             // 或者更通用的做法 (如果需要按ID更新复杂对象数组)
             // setItems(prevItems => prevItems.map(item => item.id === someId ? { ...item, name: 'Updated Name' } : item));
           };
-
+        
           return (
             <div>
               <ul>
@@ -555,15 +567,15 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         ```jsx
         // 1. 创建 Context (通常在一个单独的文件中)
         const ThemeContext = React.createContext('light'); // 默认值 'light'
-
+        
         // 2. 提供 Context 值 (在父组件中)
         function App() {
           const [theme, setTheme] = useState('light'); // 假设主题可以切换
-
+        
           const toggleTheme = () => {
             setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
           };
-
+        
           return (
             <ThemeContext.Provider value={theme}> {/* 提供 'theme' 值 */}
               <button onClick={toggleTheme}>切换主题</button>
@@ -571,7 +583,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
             </ThemeContext.Provider>
           );
         }
-
+        
         // 3. 消费 Context 值 (在任意深度的子孙组件中)
         function Toolbar() {
           return (
@@ -580,7 +592,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
             </div>
           );
         }
-
+        
         function ThemedButton() {
           const theme = React.useContext(ThemeContext); // 使用 useContext 消费 Context 值
           return (
@@ -606,7 +618,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
 *   **示例：**
     ```jsx
     const initialState = { count: 0, loading: false };
-
+    
     function reducer(state, action) {
       switch (action.type) {
         case 'increment':
@@ -619,10 +631,10 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
           throw new Error('未知 action 类型');
       }
     }
-
+    
     function ComplexCounter() {
       const [state, dispatch] = React.useReducer(reducer, initialState);
-
+    
       const fetchData = () => {
         dispatch({ type: 'set_loading', payload: true });
         // 模拟异步数据获取
@@ -631,7 +643,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
           dispatch({ type: 'set_loading', payload: false });
         }, 1000);
       };
-
+    
       return (
         <div>
           <p>Count: {state.count}</p>
@@ -660,11 +672,11 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
     function TextInputWithFocusButton() {
       const inputRef = React.useRef(null);
       const timerIdRef = React.useRef(null); // 用于保存计时器ID，不触发渲染
-
+    
       const focusInput = () => {
         inputRef.current.focus(); // 直接操作 DOM 元素
       };
-
+    
       const startTimer = () => {
         if (!timerIdRef.current) {
           timerIdRef.current = setInterval(() => {
@@ -672,14 +684,14 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
           }, 1000);
         }
       };
-
+    
       const stopTimer = () => {
         if (timerIdRef.current) {
           clearInterval(timerIdRef.current);
           timerIdRef.current = null;
         }
       };
-
+    
       // 清理计时器，防止内存泄漏
       React.useEffect(() => {
         return () => {
@@ -688,7 +700,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
           }
         };
       }, []);
-
+    
       return (
         <div>
           <input ref={inputRef} type="text" />
@@ -714,17 +726,17 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
           console.log('MemoizedChild 渲染');
           return <button onClick={onClick}>点击我 (子组件)</button>;
         });
-
+        
         // ParentComponent.jsx
         function ParentComponent() {
           const [count, setCount] = React.useState(0);
-
+        
           // 如果没有 useCallback，每次 ParentComponent 渲染，handleClick 都会是新的函数引用
           // 导致 MemoizedChild 即使 props 没变也会重新渲染。
           const handleClick = React.useCallback(() => {
             console.log('按钮被点击了！');
           }, []); // 空数组表示这个函数只在组件挂载时创建一次，永远不变
-
+        
           return (
             <div>
               <p>父组件计数: {count}</p>
@@ -742,7 +754,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         function ExpensiveCalculation() {
           const [count, setCount] = React.useState(0);
           const [text, setText] = React.useState('');
-
+        
           // 模拟一个昂贵的计算
           const expensiveValue = React.useMemo(() => {
             console.log('正在执行昂贵的计算...');
@@ -753,7 +765,7 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
             }
             return result + count;
           }, [count]); // 只有当 count 变化时，才会重新执行上面的计算
-
+        
           return (
             <div>
               <input value={text} onChange={e => setText(e.target.value)} placeholder="输入文本，不会触发昂贵计算" />
@@ -781,25 +793,25 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
     ```jsx
     // useToggle.js (自定义 Hook 文件)
     import { useState, useCallback } from 'react';
-
+    
     function useToggle(initialState = false) {
       const [state, setState] = useState(initialState);
-
+    
       // 使用 useCallback 确保 toggle 函数的引用稳定
       const toggle = useCallback(() => setState(prev => !prev), []);
-
+    
       return [state, toggle]; // 返回状态和更新函数
     }
-
+    
     export default useToggle;
-
+    
     // MyComponent.jsx (使用自定义 Hook)
     import React from 'react';
     import useToggle from './useToggle'; // 导入自定义 Hook
-
+    
     function MyComponent() {
       const [isOn, toggle] = useToggle(false); // 使用自定义 Hook
-
+    
       return (
         <div>
           <p>当前状态: {isOn ? '开' : '关'}</p>
@@ -807,10 +819,10 @@ Hooks 是 React 16.8 引入的革命性功能，它让函数式组件也能拥�
         </div>
       );
     }
-
+    
     function AnotherComponent() {
       const [isVisible, toggleVisibility] = useToggle(true); // 另一个组件也可以复用这个逻辑
-
+    
       return (
         <div>
           {isVisible && <p>我现在可见！</p>}
