@@ -40,7 +40,6 @@ const { Content } = await render(note);
 		}}
 		date={note.data.publishDate}
 	/>
-		<div id="aplayer"></div>
 	
 	<div
 		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
@@ -50,19 +49,3 @@ const { Content } = await render(note);
 	</div>
 	
 </article>
-
-<script>
-	if (typeof window !== "undefined" && window.APlayer) {
-    new window.APlayer({
-    container: document.getElementById('aplayer'),
-    audio: [
-        {
-            name: 'Kinfolks',
-            artist: 'Sam Hunt',
-            url: 'https://photo.459122.xyz/i/a37a948320b417223fd537344b600efd.mp3',
-            cover: 'https://i.ytimg.com/vi/Wk7ITw2Bl8s/hqdefault.jpg?v=5db9f643'
-        }
-        ]
-       });
-     }
-</script>
