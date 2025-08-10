@@ -2,6 +2,7 @@
 title: Jenkins-note
 description: Jenkins学习笔记记录 | 具有时效性，更新日期3/25/2025
 publishDate: 2025-04-28
+draft: true
 tags:
   - study
 ogImage: /social-card.avif
