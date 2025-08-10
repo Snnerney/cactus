@@ -13,7 +13,7 @@ publishDate: 2025-08-11T01:28
 
 最近在刷一些视频的时候发现听到过很多次星露谷的配音了，不知道是不是因为关注效应导致我觉得遇到的次数特别多hh，星露谷的背景音加在现实生活中 会让我有种奇妙的感受
 
-<img src="https://pub-2922618b298540fba9bd5a8f8500b762.r2.dev/Gx77TsxWMAAPfkx.jpg" alt="Gx77TsxWMAAPfkx" style="zoom: 15%;" />
+<img src="https://linux.do/uploads/default/original/4X/5/1/3/5133caec53165ccc0ec1167ea0cc9aa311aa27cd.jpeg" alt="Gx77TsxWMAAPfkx" style="zoom: 15%;" />
 
 -- （图在x主页刷到的，感觉很温馨hh）- pic from https://x.com/lavendel080/status/1954275658370032045
 
