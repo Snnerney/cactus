@@ -2,6 +2,7 @@
 title: 计网-note
 description: 与生活息息相关的计算机网络原理
 publishDate: 2025-06-19
+draft: true
 tags:
   - study
 ogImage: /social-card.avif
