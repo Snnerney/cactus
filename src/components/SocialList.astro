@@ -8,7 +8,7 @@ interface SocialLink {
     name: string;
     type?: 'social' | 'friend';
     description?: string;
-    iconType?: 'local' | 'url' | 'auto'; 
+    iconType?: 'local' | 'url' | 'auto';
 }
 
 const socialLinks: SocialLink[] = [
@@ -44,31 +44,31 @@ const friendLinks: SocialLink[] = [
         link: "https://www.qqwx.de/",
         name: "faust",
         type: 'friend',
-        iconType: 'local' 
+        iconType: 'local'
     },
     {
         friendlyName: "焕昭君",
         link: "https://blog.huan666.de",
-        name: "https://blog.huan666.de/img/author.webp",  
+        name: "https://blog.huan666.de/img/author.webp",
         type: 'friend',
         description: '知行合一，日拱一卒',
-        iconType: 'url'  
+        iconType: 'url'
     },
     {
         friendlyName: "xnne",
         link: "https://xnnehang.top/",
-        name: "https://linux.do/uploads/default/optimized/4X/1/1/b/11bad4399b6b69291630913d58f85f8b11b60aa6_2_1000x1000.webp",  
+        name: "https://linux.do/uploads/default/optimized/4X/1/1/b/11bad4399b6b69291630913d58f85f8b11b60aa6_2_1000x1000.webp",
         type: 'friend',
         description: '青石巷道闻星铃，披虹沐雪见本心。他日北寒仙界会，一声道友尽沧桑。',
-        iconType: 'url'  
+        iconType: 'url'
     },
     {
         friendlyName: "homepage",
         link: "https://noospic.me",
-        name: "https://linux.do/user_avatar/linux.do/noospic/288/690854_2.png",  
+        name: "https://linux.do/user_avatar/linux.do/noospic/288/690854_2.png",
         type: 'friend',
         description: 'my homepage',
-        iconType: 'url' 
+        iconType: 'url'
     },
 ];
 ---
@@ -98,11 +98,11 @@ const friendLinks: SocialLink[] = [
                             rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
                             target="_blank"
                         >
-                            <Icon 
-                                aria-hidden="true" 
-                                class="h-full w-full" 
-                                focusable="false" 
-                                name={name} 
+                            <Icon
+                                aria-hidden="true"
+                                class="h-full w-full"
+                                focusable="false"
+                                name={name}
                             />
                             <span class="sr-only">{friendlyName}</span>
                         </a>
@@ -116,55 +116,55 @@ const friendLinks: SocialLink[] = [
     {friendLinks.length > 0 && (
         <div class="flex flex-col items-start gap-y-4 text-left">
             <p class="text-lg font-bold text-gray-600">Friends</p>
-           <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
-  {friendLinks.map(({ friendlyName, isWebmention, link, name, description, iconType = 'auto' }) => {
-      const isUrlIcon = iconType === 'url' || 
-                       (iconType === 'auto' && (name.startsWith('http') || name.startsWith('//')));
-      
-      return (
-          <li class="flex items-start gap-x-2 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition h-auto w-60">
-              <div class="h-6 w-6 flex-shrink-0 mt-0.5">
-                  {isUrlIcon ? (
-                      <img 
-                          src={name}
-                          alt={`${friendlyName} icon`}
-                          class="h-full w-full rounded object-cover"
-                          loading="lazy"
-                          onerror="this.style.display='none';"
-                      />
-                  ) : (
-                      <Icon 
-                          aria-hidden="true" 
-                          class="h-full w-full text-gray-700" 
-                          focusable="false" 
-                          name={name} 
-                      />
-                  )}
-              </div>
-              <div class="flex-1 min-w-0">
-                  <a
-                      class="text-link font-semibold hover:underline block truncate text-sm"
-                      href={link}
-                      rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
-                      target="_blank"
-                      title={friendlyName}
-                  >
-                      {friendlyName}
-                  </a>
-                  {description && (
-                      <p 
-                        class="hover-peek text-xs text-gray-500 mt-0.5 leading-snug truncate" 
-                        data-full={description}
-                      >
-                        {description}
-                      </p>
-                  )}
-              </div>
-          </li>
-      );
-  })}
-</ul>
+           {/* Change is on this line: gap-3 has been changed to gap-2 */}
+           <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
+              {friendLinks.map(({ friendlyName, isWebmention, link, name, description, iconType = 'auto' }) => {
+                  const isUrlIcon = iconType === 'url' ||
+                                   (iconType === 'auto' && (name.startsWith('http') || name.startsWith('//')));
 
+                  return (
+                      <li class="flex items-start gap-x-2 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition h-auto w-60">
+                          <div class="h-6 w-6 flex-shrink-0 mt-0.5">
+                              {isUrlIcon ? (
+                                  <img
+                                      src={name}
+                                      alt={`${friendlyName} icon`}
+                                      class="h-full w-full rounded object-cover"
+                                      loading="lazy"
+                                      onerror="this.style.display='none';"
+                                  />
+                              ) : (
+                                  <Icon
+                                      aria-hidden="true"
+                                      class="h-full w-full text-gray-700"
+                                      focusable="false"
+                                      name={name}
+                                  />
+                              )}
+                          </div>
+                          <div class="flex-1 min-w-0">
+                              <a
+                                  class="text-link font-semibold hover:underline block truncate text-sm"
+                                  href={link}
+                                  rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
+                                  target="_blank"
+                                  title={friendlyName}
+                              >
+                                  {friendlyName}
+                              </a>
+                              {description && (
+                                  <p
+                                    class="hover-peek text-xs text-gray-500 mt-0.5 leading-snug truncate"
+                                    data-full={description}
+                                  >
+                                    {description}
+                                  </p>
+                              )}
+                          </div>
+                      </li>
+                  );
+              })}
+            </ul>
         </div>
     )}
 </div>
