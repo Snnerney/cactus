@@ -41,13 +41,13 @@ const friendLinks: SocialLink[] = [
    {
         friendlyName: "Faust",
         link: "https://www.qqwx.de/",
-        name: "f1",
+        name: "https://www.qqwx.de/favicon.ico",
         type: 'friend',
     },
     {
         friendlyName: "homepage",
         link: "https://noospic.me",
-        name: "homepage",
+        name: "https://noospic.me/favicon.ico",
         type: 'friend',
         description: 'my homepage'
     },
@@ -91,12 +91,21 @@ const friendLinks: SocialLink[] = [
                 {friendLinks.map(({ friendlyName, isWebmention, link, name, description }) => (
                     <li class="flex items-start gap-x-3 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
                         <div class="h-8 w-8 flex-shrink-0">
-                            <Icon 
-                                aria-hidden="true" 
-                                class="h-full w-full text-gray-700" 
-                                focusable="false" 
-                                name={name} 
-                            />
+                            {name.startsWith('http') ? (
+                                <img 
+                                    src={name}
+                                    alt={`${friendlyName} icon`}
+                                    class="h-full w-full rounded object-cover"
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <Icon 
+                                    aria-hidden="true" 
+                                    class="h-full w-full text-gray-700" 
+                                    focusable="false" 
+                                    name={name} 
+                                />
+                            )}
                         </div>
                         <div>
                             <a

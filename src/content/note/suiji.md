@@ -14,3 +14,7 @@ publishDate: 2025-08-11T01:28
 <img src="https://linux.do/uploads/default/original/4X/5/1/3/5133caec53165ccc0ec1167ea0cc9aa311aa27cd.jpeg" alt="Gx77TsxWMAAPfkx" style="zoom: 15%;" />
 
 -- （图在x主页刷到的，感觉很温馨hh）- pic from https://x.com/lavendel080/status/1954275658370032045
+
+
+
+https://e05z4goz0ip.feishu.cn/wiki/KWHRw2IO9iBLXXkOeMGc6bienTh 作者：人穷脸丑农村户口2023 https://www.bilibili.com/read/cv27741070/?jump_opus=1 出处：bilibili
