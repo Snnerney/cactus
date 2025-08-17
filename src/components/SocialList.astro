@@ -8,7 +8,7 @@ interface SocialLink {
     name: string;
     type?: 'social' | 'friend';
     description?: string;
-    iconType?: 'local' | 'url' | 'auto'; // 新增：图标类型配置
+    iconType?: 'local' | 'url' | 'auto'; 
 }
 
 const socialLinks: SocialLink[] = [
@@ -57,10 +57,10 @@ const friendLinks: SocialLink[] = [
     {
         friendlyName: "xnne",
         link: "https://xnnehang.top/",
-        name: "https://linux.do/uploads/default/optimized/4X/1/1/b/11bad4399b6b69291630913d58f85f8b11b60aa6_2_1000x1000.webp",  // 使用本地 SVG 图标
+        name: "https://linux.do/uploads/default/optimized/4X/1/1/b/11bad4399b6b69291630913d58f85f8b11b60aa6_2_1000x1000.webp",  
         type: 'friend',
         description: '青石巷道闻星铃，披虹沐雪见本心。他日北寒仙界会，一声道友尽沧桑。',
-        iconType: 'url'  // 明确指定使用本地图标
+        iconType: 'url'  
     },
     {
         friendlyName: "homepage",
@@ -70,8 +70,6 @@ const friendLinks: SocialLink[] = [
         description: 'my homepage',
         iconType: 'url' 
     },
-    
-
 ];
 ---
 
@@ -81,6 +79,16 @@ const friendLinks: SocialLink[] = [
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+    }
+
+    /* 固定 description 高度，对标第二个友链 */
+    .fixed-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;   /* 固定 2 行 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.5rem;     /* 每行高度 */
+        max-height: 3rem;        /* 2 行 × 1.5rem */
     }
 </style>
 
@@ -154,7 +162,9 @@ const friendLinks: SocialLink[] = [
                                     {friendlyName}
                                 </a>
                                 {description && (
-                                    <p class="text-sm text-gray-500 mt-1 leading-relaxed break-words line-clamp-3">{description}</p>
+                                    <p class="text-sm text-gray-500 mt-1 leading-relaxed break-words fixed-desc">
+                                        {description}
+                                    </p>
                                 )}
                             </div>
                         </li>
