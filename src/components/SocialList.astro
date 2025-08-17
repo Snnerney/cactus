@@ -80,35 +80,6 @@ const friendLinks: SocialLink[] = [
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    /* hover 时在右侧显示完整 description */
-.hover-peek {
-  position: relative;
-  cursor: pointer;
-}
-
-.hover-peek::after {
-  content: attr(data-full);
-  position: absolute;
-  left: 100%;          /* 在右边显示 */
-  top: 0;
-  margin-left: 0.5rem;
-  white-space: nowrap;
-  background: #f9fafb;
-  color: #374151;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 10;
-}
-
-.hover-peek:hover::after {
-  opacity: 1;
-}
 
 </style>
 
