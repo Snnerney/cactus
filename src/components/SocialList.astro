@@ -74,6 +74,16 @@ const friendLinks: SocialLink[] = [
 
 ];
 ---
+
+<style>
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
 <div class="mt-8 flex min-h-[64px] flex-col gap-y-8">
 
     <!-- 社交链接区块 -->
@@ -105,17 +115,17 @@ const friendLinks: SocialLink[] = [
 
     <!-- 友链链接区块 -->
     {friendLinks.length > 0 && (
-        <div class="flex flex-col items-start gap-y-2 text-left">
+        <div class="flex flex-col items-start gap-y-4 text-left">
             <p class="text-lg font-bold text-gray-600">Friends</p>
-            <ul class="flex flex-col gap-y-2">
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 {friendLinks.map(({ friendlyName, isWebmention, link, name, description, iconType = 'auto' }) => {
                     // 智能判断图标类型
                     const isUrlIcon = iconType === 'url' || 
                                      (iconType === 'auto' && (name.startsWith('http') || name.startsWith('//')));
                     
                     return (
-                        <li class="flex items-start gap-x-3 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
-                            <div class="h-8 w-8 flex-shrink-0">
+                        <li class="flex items-start gap-x-3 p-3 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition h-auto">
+                            <div class="h-8 w-8 flex-shrink-0 mt-1">
                                 {isUrlIcon ? (
                                     <img 
                                         src={name}
@@ -133,17 +143,18 @@ const friendLinks: SocialLink[] = [
                                     />
                                 )}
                             </div>
-                            <div>
+                            <div class="flex-1 min-w-0">
                                 <a
-                                    class="text-link font-semibold hover:underline"
+                                    class="text-link font-semibold hover:underline block truncate"
                                     href={link}
                                     rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
                                     target="_blank"
+                                    title={friendlyName}
                                 >
                                     {friendlyName}
                                 </a>
                                 {description && (
-                                    <p class="text-sm text-gray-500">{description}</p>
+                                    <p class="text-sm text-gray-500 mt-1 leading-relaxed break-words line-clamp-3">{description}</p>
                                 )}
                             </div>
                         </li>
