@@ -74,22 +74,20 @@ const friendLinks: SocialLink[] = [
 ---
 
 <style>
-    .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+    /* 默认一行截断 */
+.fixed-desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
 
-    /* 固定 description 高度，对标第二个友链 */
-    .fixed-desc {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;   /* 固定 2 行 */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        line-height: 1.5rem;     /* 每行高度 */
-        max-height: 3rem;        /* 2 行 × 1.5rem */
-    }
+/* hover 时展开完整内容 */
+.fixed-desc:hover {
+    white-space: normal;
+    overflow: visible;
+}
+
 </style>
 
 <div class="mt-8 flex min-h-[64px] flex-col gap-y-8">
