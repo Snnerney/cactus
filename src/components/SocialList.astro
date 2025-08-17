@@ -8,6 +8,7 @@ interface SocialLink {
     name: string;
     type?: 'social' | 'friend';
     description?: string;
+    iconType?: 'local' | 'url' | 'auto'; // 新增：图标类型配置
 }
 
 const socialLinks: SocialLink[] = [
@@ -41,15 +42,24 @@ const friendLinks: SocialLink[] = [
    {
         friendlyName: "Faust",
         link: "https://www.qqwx.de/",
-        name: "https://www.qqwx.de/favicon.ico",
+        name: "f1",
         type: 'friend',
+        iconType: 'local'  // 明确指定使用 URL 图标
     },
     {
         friendlyName: "homepage",
         link: "https://noospic.me",
-        name: "https://noospic.me/favicon.ico",
+        name: "https://linux.do/user_avatar/linux.do/noospic/288/690854_2.png",  // 使用本地 SVG 图标
         type: 'friend',
-        description: 'my homepage'
+        description: 'my homepage',
+        iconType: 'url'  // 明确指定使用本地图标
+    },
+    {
+        friendlyName: "Auto Example",
+        link: "https://example.com",
+        name: "https://example.com/favicon.ico",  // 自动检测
+        type: 'friend',
+        iconType: 'auto'  // 自动根据 name 内容判断
     },
 
 ];
@@ -88,40 +98,47 @@ const friendLinks: SocialLink[] = [
         <div class="flex flex-col items-start gap-y-2 text-left">
             <p class="text-lg font-bold text-gray-600">Friends</p>
             <ul class="flex flex-col gap-y-2">
-                {friendLinks.map(({ friendlyName, isWebmention, link, name, description }) => (
-                    <li class="flex items-start gap-x-3 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
-                        <div class="h-8 w-8 flex-shrink-0">
-                            {name.startsWith('http') ? (
-                                <img 
-                                    src={name}
-                                    alt={`${friendlyName} icon`}
-                                    class="h-full w-full rounded object-cover"
-                                    loading="lazy"
-                                />
-                            ) : (
-                                <Icon 
-                                    aria-hidden="true" 
-                                    class="h-full w-full text-gray-700" 
-                                    focusable="false" 
-                                    name={name} 
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <a
-                                class="text-link font-semibold hover:underline"
-                                href={link}
-                                rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
-                                target="_blank"
-                            >
-                                {friendlyName}
-                            </a>
-                            {description && (
-                                <p class="text-sm text-gray-500">{description}</p>
-                            )}
-                        </div>
-                    </li>
-                ))}
+                {friendLinks.map(({ friendlyName, isWebmention, link, name, description, iconType = 'auto' }) => {
+                    // 智能判断图标类型
+                    const isUrlIcon = iconType === 'url' || 
+                                     (iconType === 'auto' && (name.startsWith('http') || name.startsWith('//')));
+                    
+                    return (
+                        <li class="flex items-start gap-x-3 p-2 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition">
+                            <div class="h-8 w-8 flex-shrink-0">
+                                {isUrlIcon ? (
+                                    <img 
+                                        src={name}
+                                        alt={`${friendlyName} icon`}
+                                        class="h-full w-full rounded object-cover"
+                                        loading="lazy"
+                                        onerror="this.style.display='none';"
+                                    />
+                                ) : (
+                                    <Icon 
+                                        aria-hidden="true" 
+                                        class="h-full w-full text-gray-700" 
+                                        focusable="false" 
+                                        name={name} 
+                                    />
+                                )}
+                            </div>
+                            <div>
+                                <a
+                                    class="text-link font-semibold hover:underline"
+                                    href={link}
+                                    rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
+                                    target="_blank"
+                                >
+                                    {friendlyName}
+                                </a>
+                                {description && (
+                                    <p class="text-sm text-gray-500">{description}</p>
+                                )}
+                            </div>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     )}
