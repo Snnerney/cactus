@@ -34,7 +34,7 @@ git add. 一般在教程中给出的语句就是这个，让初学者会一头�
 
 git commit -m "commit-message" 提交至本地仓库（commit-message为提交变更信息，遵循基本的commit-rules），在IDE中若有集成llm，可以选择使用ai进行commit-msg自动生成；
 
-git push origin HEAD:<remote-branch> ： remote-branch为自定义远程分支名，对于当前迭代中，当前的迭代分支就相当于整个小功能的master，clone到本地即默认关联这个“master主分支”，在推送时另外创建一个远程分支（即remote-branch），进行pr/mr合并到“master主分支”，这样当remote-branch分支中提交的代码被打回，不会污染主功能的开发，同时也可以直接revert回退到特定commit记录
+git push origin HEAD:`remote-branch` ： remote-branch为自定义远程分支名，对于当前迭代中，当前的迭代分支就相当于整个小功能的master，clone到本地即默认关联这个“master主分支”，在推送时另外创建一个远程分支（即remote-branch），进行pr/mr合并到“master主分支”，这样当remote-branch分支中提交的代码cr为通过被打回，不会污染主功能的开发，同时也可以直接revert回退到特定commit记录
 
 git branch -vv：查看本地分支与远程分支的关联关系
 
