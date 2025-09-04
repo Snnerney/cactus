@@ -3,7 +3,7 @@ title: 星露谷小记
 description: 星露谷小记
 publishDate: 2025-08-11T01:28
 ---
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=996422647&bvid=BV1Ws4y1q7bs&cid=1139116330&p=27" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=996422647&bvid=BV1Ws4y1q7bs&cid=1139116330&p=27" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
 
 #tag[手动] update at 08.24 | to be updated
 
@@ -21,11 +21,13 @@ publishDate: 2025-08-11T01:28
 
 重新再搭配人物outlook，感觉比上一个档顺眼了不少
 
+感觉节日最丰富的好像还是 `秋季展览会` ，可以玩的项目有好几个，~~我最擅长的还是钓鱼~~， 好吧也不是很擅长
+
 <img src="https://pub-2922618b298540fba9bd5a8f8500b762.r2.dev/image-20250824233857332.png" alt="image-20250824233857332" style="zoom:45%;" />
 
 <img src="https://pub-2922618b298540fba9bd5a8f8500b762.r2.dev/fd5fb0f48255dd4883d87e6c4c124a1e.jpg" alt="fd5fb0f48255dd4883d87e6c4c124a1e" style="zoom:34%;" />
 
-----
+---
 
 好久没玩星露谷了 ~~我好想种地啊wwwwwww~~
 
