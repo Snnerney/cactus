@@ -59,7 +59,7 @@ Standard B1s (1 vcpu，1 GiB 内存[**实际可用约900MB**])
 1. 连接az虚拟机后输入命令行 : `curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh && bash quick_start.sh` (Debian)
 2. 除了用户名和密码自设置外其余均可设为默认
 3. 由于是远程虚拟机，需要在az中放行端口
-很简单,但是搭完突然不知道要干什么了，又想起之前看到的[朋友圈项目](https://github.com/kingwrcy/moments)了,支持docker部署，所以顺便一起部署一下吧
+顺便一起部署了之前看到的[朋友圈项目](https://github.com/kingwrcy/moments)了,支持docker部署
 <details>
 <summary>my own comments </summary>
 <img src="https://picx-6wq.pages.dev/rest/F4snURK.png"/>
