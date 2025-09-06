@@ -82,12 +82,12 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
 <div class="timeline-container relative w-full overflow-hidden">
   <p class="text-sm text-gray-600 mb-4">Time Line</p>
 
-  <div class="timeline-track relative h-[120px] px-4">
+  <div class="timeline-track relative h-[140px] px-4">
     <!-- 主轴线 -->
-    <div class="absolute bottom-6 left-4 right-4 h-px bg-gray-400"></div>
+    <div class="absolute bottom-10 left-4 right-4 h-px bg-gray-400"></div>
 
     <!-- 月份竖线（根据文章数量调整高度） -->
-    <div class="absolute bottom-6 left-4 right-4">
+    <div class="absolute bottom-10 left-4 right-4">
       {monthlyData.map((month) => {
         const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (monthPos / totalDays) * 100;
@@ -109,7 +109,7 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
     </div>
 
     <!-- 月份标签 -->
-    <div class="absolute bottom-0 left-4 right-4">
+    <div class="absolute bottom-2 left-4 right-4">
       {months.map((month) => {
         const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (monthPos / totalDays) * 100;
@@ -125,7 +125,7 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
     </div>
 
     <!-- 每天竖线 -->
-    <div class="absolute bottom-6 left-4 right-4">
+    <div class="absolute bottom-10 left-4 right-4">
       {allActiveDays.map((day) => {
         const dayPos = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (dayPos / totalDays) * 100;
@@ -221,9 +221,9 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
       const rect = element.getBoundingClientRect();
       const parentRect = element.closest(".timeline-track").getBoundingClientRect();
 
-      // 计算tooltip位置，居中显示
+      // 计算tooltip位置，始终显示在时间轴下方，居中对齐
       let left = rect.left - parentRect.left + (rect.width / 2);
-      let top = rect.top - parentRect.top - 8; // 显示在元素上方
+      let top = rect.bottom - parentRect.top + 8; // 始终显示在元素下方
       
       // 调整水平位置，确保居中且不超出容器
       const displayWidth = infoDisplay.offsetWidth || 200;
@@ -236,11 +236,6 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
         left = parentRect.width - displayWidth - 20;
       }
       if (left < 20) left = 20;
-      
-      // 如果上方空间不够，显示在下方
-      if (top < 0) {
-        top = rect.bottom - parentRect.top + 8;
-      }
 
       infoDisplay.style.left = left + "px";
       infoDisplay.style.top = top + "px";
