@@ -1,5 +1,4 @@
 ---
-// 横向时间轴组件（6个月版本）
 interface Props {
   data: Record<string, number>;
   posts: any[];
@@ -8,7 +7,7 @@ interface Props {
 
 const { data = {}, posts = [], notes = [] } = Astro.props;
 
-// 获取过去6个月的数据
+// 获取过去 6 个月
 const now = new Date();
 const months = [];
 for (let i = 5; i >= 0; i--) {
@@ -21,152 +20,108 @@ for (let i = 5; i >= 0; i--) {
   });
 }
 
-// 获取每日文章详情（包含链接）
+// 获取某天的文章
 function getDayArticles(dateStr: string) {
-  const articles = [];
-  const targetDate = new Date(dateStr);
-  
-  [...posts, ...notes].forEach(entry => {
+  const articles: any[] = [];
+  [...posts, ...notes].forEach((entry) => {
     const publishDate = entry.data.publishDate;
     if (!publishDate) return;
-    
-    let entryDate;
-    if (publishDate instanceof Date) {
-      entryDate = publishDate;
-    } else {
-      entryDate = new Date(publishDate);
-    }
-    
+    const entryDate = publishDate instanceof Date ? publishDate : new Date(publishDate);
     if (entryDate.toISOString().slice(0, 10) === dateStr) {
-      const baseUrl = entry.collection === 'post' ? '/posts/' : '/notes/';
+      const baseUrl = entry.collection === "post" ? "/posts/" : "/notes/";
       const slug = entry.slug || entry.id;
-      
       articles.push({
-        title: entry.data.title || '无标题',
-        type: entry.collection === 'post' ? 'blog' : 'note',
+        title: entry.data.title || "无标题",
+        type: entry.collection === "post" ? "blog" : "note",
         url: `${baseUrl}${slug}`,
-        date: entryDate
       });
     }
   });
-  
   return articles;
 }
 
-// 计算每个月的文章总数
-const monthlyData = months.map(month => {
-  let count = 0;
-  const monthStart = new Date(month.year, month.month - 1, 1);
-  const monthEnd = new Date(month.year, month.month, 0);
-  
-  for (let d = monthStart; d <= monthEnd; d.setDate(d.getDate() + 1)) {
-    const dateKey = d.toISOString().slice(0, 10);
-    if (data[dateKey]) {
-      count += data[dateKey];
-    }
-  }
-  
-  return {
-    ...month,
-    count
-  };
-});
-
-// 生成所有有文章的日期
-const allActiveDays = [];
-Object.keys(data).forEach(dateKey => {
+// 收集所有有文章的日期
+const allActiveDays: any[] = [];
+Object.keys(data).forEach((dateKey) => {
   if (data[dateKey] > 0) {
     const date = new Date(dateKey);
-    const articles = getDayArticles(dateKey);
-    
     allActiveDays.push({
       date,
       dateKey,
       count: data[dateKey],
-      articles,
-      day: date.getDate(),
-      month: date.getMonth() + 1,
-      year: date.getFullYear(),
-      formatted: date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+      articles: getDayArticles(dateKey),
+      formatted: date.toLocaleDateString("zh-CN", { month: "short", day: "numeric" }),
     });
   }
 });
-
 allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-// 计算时间轴范围
+// 时间轴范围
 const startDate = months[0].date;
 const endDate = new Date(months[months.length - 1].year, months[months.length - 1].month, 0);
 const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-
-// 计算最大文章数，用于竖线高度比例
-const maxCount = Math.max(...monthlyData.map(m => m.count), ...allActiveDays.map(d => d.count), 1);
 ---
 
-<div class="timeline-container">
-  <div class="mb-4">
-    <p class="text-sm text-gray-600">Time Line</p>
-  </div>
+<div class="timeline-container relative w-full">
+  <p class="text-sm text-gray-600 mb-4">Time Line</p>
 
-  <div class="timeline-horizontal">
-    <div class="timeline-track relative" style="height: 100px;">
-      <!-- 主轴线 -->
-      <div class="absolute bottom-6 left-0 right-0 h-px bg-gray-400"></div>
-      
-      <!-- 月份标签 -->
-      <div class="absolute bottom-0 left-0 right-0">
-        {monthlyData.map((month) => {
-          const monthPosition = (month.date.getTime() - months[0].date.getTime()) / (1000 * 60 * 60 * 24);
-          const totalDays = (months[months.length - 1].date.getTime() - months[0].date.getTime()) / (1000 * 60 * 60 * 24);
-          const leftPercentage = (monthPosition / totalDays) * 100;
-          return (
-            <div class="absolute text-xs text-gray-700 font-medium transform -translate-x-1/2" 
-                 style={`left:${leftPercentage}%`}>
-              {month.shortName}
-            </div>
-          );
-        })}
-      </div>
+  <div class="timeline-track relative h-[120px]">
+    <!-- 主轴线 -->
+    <div class="absolute bottom-6 left-0 right-0 h-px bg-gray-400"></div>
 
-      <!-- 日期竖线 -->
-      <div class="absolute bottom-6 left-0 right-0">
-        {allActiveDays.map((day) => {
-          const dayPosition = (day.date.getTime() - months[0].date.getTime()) / (1000 * 60 * 60 * 24);
-          const totalDays = (months[months.length - 1].date.getTime() - months[0].date.getTime()) / (1000 * 60 * 60 * 24);
-          const leftPercentage = (dayPosition / totalDays) * 100;
+    <!-- 月份标签 -->
+    <div class="absolute bottom-0 left-0 right-0">
+      {months.map((month) => {
+        const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const left = (monthPos / totalDays) * 100;
+        return (
+          <div
+            class="absolute text-xs text-gray-700 font-medium transform -translate-x-1/2"
+            style={`left:${left}%`}
+          >
+            {month.shortName}
+          </div>
+        );
+      })}
+    </div>
 
-          return (
-            <div class="absolute transform -translate-x-1/2 day-line-group" 
-                 style={`left:${leftPercentage}%; bottom:0;`}>
-              {day.articles.map((article) => (
-                <div 
-                  class="w-0.5 bg-blue-600 cursor-pointer hover:bg-blue-800"
-                  style="height:14px; margin-bottom:1px;"
-                  data-article-info={`${day.formatted}: ${article.title}`}
-                  data-article-url={article.url}
-                  data-article-type={article.type}
-                ></div>
-              ))}
-            </div>
-          );
-        })}
-      </div>
+    <!-- 每天竖线 -->
+    <div class="absolute bottom-6 left-0 right-0">
+      {allActiveDays.map((day) => {
+        const dayPos = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const left = (dayPos / totalDays) * 100;
+        return (
+          <div
+            class="absolute transform -translate-x-1/2 group day-line-group"
+            style={`left:${left}%; bottom:0;`}
+            data-date={day.formatted}
+          >
+            {day.articles.map((article) => (
+              <div
+                class="w-0.5 bg-blue-600 hover:bg-blue-800 cursor-pointer"
+                style="height:14px; margin-bottom:1px;"
+                data-title={article.title}
+                data-url={article.url}
+                data-type={article.type}
+              ></div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
 
-      <!-- 信息显示区域 -->
-      <div id="info-display" 
-           class="absolute bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 shadow-sm opacity-0 transition-opacity pointer-events-auto whitespace-nowrap">
-        <div id="info-content"></div>
-        <div id="info-links" class="mt-1 space-y-1"></div>
-      </div>
+    <!-- hover 浮层 -->
+    <div
+      id="info-display"
+      class="absolute bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 shadow-md opacity-0 pointer-events-none transition-opacity whitespace-nowrap"
+    >
+      <div id="info-date" class="font-medium mb-1"></div>
+      <div id="info-links" class="space-y-1"></div>
     </div>
   </div>
 </div>
 
 <style>
-  .timeline-horizontal {
-    position: relative;
-    width: 100%;
-  }
   #info-display {
     max-width: 300px;
     z-index: 50;
@@ -176,50 +131,72 @@ const maxCount = Math.max(...monthlyData.map(m => m.count), ...allActiveDays.map
     text-decoration: none;
   }
   #info-links a:hover {
-    color: #1d4ed8;
     text-decoration: underline;
+    color: #1d4ed8;
   }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const infoDisplay = document.getElementById('info-display');
-    const infoContent = document.getElementById('info-content');
-    const infoLinks = document.getElementById('info-links');
+  document.addEventListener("DOMContentLoaded", () => {
+    const infoDisplay = document.getElementById("info-display");
+    const infoDate = document.getElementById("info-date");
+    const infoLinks = document.getElementById("info-links");
 
-    const dayGroups = document.querySelectorAll('.day-line-group');
-    dayGroups.forEach(group => {
-      const articles = group.querySelectorAll('.day-article-line, .w-0.5');
-      group.addEventListener('mouseenter', function(e) {
-        if (articles.length > 0) {
-          const firstArticle = articles[0];
-          const dateInfo = firstArticle.getAttribute('data-article-info').split(':')[0];
-          infoContent.textContent = `${dateInfo}: ${articles.length} 篇文章`;
-          infoLinks.innerHTML = '';
-          articles.forEach(article => {
-            const title = article.getAttribute('data-article-info').split(': ')[1];
-            const url = article.getAttribute('data-article-url');
-            const type = article.getAttribute('data-article-type');
-            const linkDiv = document.createElement('div');
-            linkDiv.innerHTML = `
-              <a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-xs">
-                ${title} <span class="text-gray-500">[${type}]</span>
-              </a>
-            `;
-            infoLinks.appendChild(linkDiv);
-          });
-          infoDisplay.style.opacity = '1';
-          infoDisplay.style.left = e.pageX + 'px';
-          infoDisplay.style.top = (e.pageY + 20) + 'px';
-        }
+    let hoverTarget = null;
+    let hideTimer = null;
+
+    function showTooltip(group, e) {
+      const date = group.getAttribute("data-date");
+      const articles = group.querySelectorAll("div[data-title]");
+      if (!articles.length) return;
+
+      infoDate.textContent = `${date}：${articles.length} 篇文章`;
+      infoLinks.innerHTML = "";
+      articles.forEach((article) => {
+        const title = article.getAttribute("data-title");
+        const url = article.getAttribute("data-url");
+        const type = article.getAttribute("data-type");
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.className = "block text-xs";
+        link.innerHTML = `${title} <span class="text-gray-500">[${type}]</span>`;
+        infoLinks.appendChild(link);
       });
-      group.addEventListener('mousemove', function(e) {
-        infoDisplay.style.left = e.pageX + 'px';
-        infoDisplay.style.top = (e.pageY + 20) + 'px';
+
+      const rect = group.getBoundingClientRect();
+      const parentRect = group.closest(".timeline-track").getBoundingClientRect();
+
+      infoDisplay.style.left = rect.left - parentRect.left + "px";
+      infoDisplay.style.top = rect.bottom - parentRect.top + 12 + "px";
+
+      infoDisplay.style.opacity = "1";
+      infoDisplay.style.pointerEvents = "auto";
+    }
+
+    function hideTooltip() {
+      infoDisplay.style.opacity = "0";
+      infoDisplay.style.pointerEvents = "none";
+    }
+
+    document.querySelectorAll(".day-line-group").forEach((group) => {
+      group.addEventListener("mouseenter", (e) => {
+        clearTimeout(hideTimer);
+        hoverTarget = group;
+        showTooltip(group, e);
       });
-      group.addEventListener('mouseleave', function() {
-        infoDisplay.style.opacity = '0';
+      group.addEventListener("mouseleave", () => {
+        hideTimer = setTimeout(() => {
+          if (hoverTarget === group) hideTooltip();
+        }, 200);
       });
+    });
+
+    infoDisplay.addEventListener("mouseenter", () => {
+      clearTimeout(hideTimer);
+    });
+    infoDisplay.addEventListener("mouseleave", () => {
+      hideTimer = setTimeout(hideTooltip, 200);
     });
   });
 </script>
