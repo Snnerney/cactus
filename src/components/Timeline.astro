@@ -79,15 +79,15 @@ const endDate = new Date(months[months.length - 1].year, months[months.length - 
 const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 ---
 
-<div class="timeline-container relative w-full">
+<div class="timeline-container relative w-full overflow-hidden">
   <p class="text-sm text-gray-600 mb-4">Time Line</p>
 
-  <div class="timeline-track relative h-[120px]">
+  <div class="timeline-track relative h-[120px] px-4">
     <!-- 主轴线 -->
-    <div class="absolute bottom-6 left-0 right-0 h-px bg-gray-400"></div>
+    <div class="absolute bottom-6 left-4 right-4 h-px bg-gray-400"></div>
 
     <!-- 月份竖线（根据文章数量调整高度） -->
-    <div class="absolute bottom-6 left-0 right-0">
+    <div class="absolute bottom-6 left-4 right-4">
       {monthlyData.map((month) => {
         const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (monthPos / totalDays) * 100;
@@ -95,7 +95,7 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
         return (
           <div
             class="absolute transform -translate-x-1/2 group month-line-group hover:brightness-110"
-            style={`left:${left}%; bottom:0;`}
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%; bottom:0;`}
             data-month={`${month.year}年${month.month}月`}
             data-count={month.count}
           >
@@ -109,14 +109,14 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
     </div>
 
     <!-- 月份标签 -->
-    <div class="absolute bottom-0 left-0 right-0">
+    <div class="absolute bottom-0 left-4 right-4">
       {months.map((month) => {
         const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (monthPos / totalDays) * 100;
         return (
           <div
             class="absolute text-xs text-gray-700 font-medium transform -translate-x-1/2"
-            style={`left:${left}%`}
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%`}
           >
             {month.shortName}
           </div>
@@ -125,14 +125,14 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
     </div>
 
     <!-- 每天竖线 -->
-    <div class="absolute bottom-6 left-0 right-0">
+    <div class="absolute bottom-6 left-4 right-4">
       {allActiveDays.map((day) => {
         const dayPos = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         const left = (dayPos / totalDays) * 100;
         return (
           <div
             class="absolute transform -translate-x-1/2 group day-line-group hover:scale-110"
-            style={`left:${left}%; bottom:0;`}
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%; bottom:0;`}
             data-date={day.formatted}
           >
             {day.articles.map((article) => (
@@ -221,16 +221,26 @@ const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 
       const rect = element.getBoundingClientRect();
       const parentRect = element.closest(".timeline-track").getBoundingClientRect();
 
-      // 计算tooltip位置，确保不超出边界
-      let left = rect.left - parentRect.left;
-      let top = rect.bottom - parentRect.top + 8;
+      // 计算tooltip位置，居中显示
+      let left = rect.left - parentRect.left + (rect.width / 2);
+      let top = rect.top - parentRect.top - 8; // 显示在元素上方
       
-      // 调整水平位置，避免超出容器
-      const displayWidth = infoDisplay.offsetWidth;
-      if (left + displayWidth > parentRect.width) {
-        left = parentRect.width - displayWidth - 10;
+      // 调整水平位置，确保居中且不超出容器
+      const displayWidth = infoDisplay.offsetWidth || 200;
+      
+      // 居中对齐tooltip
+      left = left - (displayWidth / 2);
+      
+      // 边界检查
+      if (left + displayWidth > parentRect.width - 20) {
+        left = parentRect.width - displayWidth - 20;
       }
-      if (left < 0) left = 10;
+      if (left < 20) left = 20;
+      
+      // 如果上方空间不够，显示在下方
+      if (top < 0) {
+        top = rect.bottom - parentRect.top + 8;
+      }
 
       infoDisplay.style.left = left + "px";
       infoDisplay.style.top = top + "px";
