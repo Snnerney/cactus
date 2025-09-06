@@ -1,5 +1,5 @@
 ---
-// 横向时间轴组件（仿照图片样式）
+// 横向时间轴组件（严格按照图示）
 interface Props {
   data: Record<string, number>;
   posts: any[];
@@ -17,30 +17,9 @@ for (let i = 11; i >= 0; i--) {
     date,
     year: date.getFullYear(),
     month: date.getMonth() + 1,
-    monthName: date.toLocaleDateString('zh-CN', { month: 'numeric' }),
-    shortName: `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}`,
-    fullName: date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })
+    monthName: `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}`,
   });
 }
-
-// 计算每个月的文章总数
-const monthlyData = months.map(month => {
-  let count = 0;
-  const monthStart = new Date(month.year, month.month - 1, 1);
-  const monthEnd = new Date(month.year, month.month, 0);
-  
-  for (let d = monthStart; d <= monthEnd; d.setDate(d.getDate() + 1)) {
-    const dateKey = d.toISOString().slice(0, 10);
-    if (data[dateKey]) {
-      count += data[dateKey];
-    }
-  }
-  
-  return {
-    ...month,
-    count
-  };
-});
 
 // 获取每日文章详情（包含链接）
 function getDayArticles(dateStr: string) {
@@ -59,7 +38,6 @@ function getDayArticles(dateStr: string) {
     }
     
     if (entryDate.toISOString().slice(0, 10) === dateStr) {
-      // 构建文章链接
       const baseUrl = entry.collection === 'post' ? '/posts/' : '/notes/';
       const slug = entry.slug || entry.id;
       
@@ -75,7 +53,34 @@ function getDayArticles(dateStr: string) {
   return articles;
 }
 
-// 生成所有有文章的日期，用于在月份之间显示
+// 计算每个月的文章总数和文章列表
+const monthlyData = months.map(month => {
+  let count = 0;
+  const articles = [];
+  const monthStart = new Date(month.year, month.month - 1, 1);
+  const monthEnd = new Date(month.year, month.month, 0);
+  
+  for (let d = monthStart; d <= monthEnd; d.setDate(d.getDate() + 1)) {
+    const dateKey = d.toISOString().slice(0, 10);
+    if (data[dateKey]) {
+      count += data[dateKey];
+      const dayArticles = getDayArticles(dateKey);
+      articles.push(...dayArticles.map(article => ({
+        ...article,
+        day: d.getDate(),
+        dateKey
+      })));
+    }
+  }
+  
+  return {
+    ...month,
+    count,
+    articles: articles.sort((a, b) => a.day - b.day)
+  };
+});
+
+// 生成所有有文章的日期点，用于在轴线上显示
 const allActiveDays = [];
 Object.keys(data).forEach(dateKey => {
   if (data[dateKey] > 0) {
@@ -95,8 +100,12 @@ Object.keys(data).forEach(dateKey => {
   }
 });
 
-// 按日期排序
 allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+// 计算时间轴的起始和结束日期
+const startDate = months[0].date;
+const endDate = new Date(months[months.length - 1].year, months[months.length - 1].month, 0);
+const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 ---
 
 <div class="timeline-container">
@@ -108,58 +117,64 @@ allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
 
   <!-- 横向时间轴 -->
   <div class="timeline-horizontal overflow-x-auto pb-4">
-    <div class="timeline-track relative" style="min-width: 1400px; height: 120px;">
+    <div class="timeline-track relative" style="min-width: 1400px; height: 200px;">
       <!-- 主轴线 -->
-      <div class="absolute top-16 left-0 right-0 h-px bg-gray-400"></div>
+      <div class="absolute top-20 left-0 right-0 h-px bg-gray-400"></div>
       
-      <!-- 月份节点容器 -->
-      <div class="relative flex justify-between items-center h-full">
-        {monthlyData.map((month, index) => (
-          <div class="timeline-month relative flex flex-col items-center" style="flex: 1;">
-            <!-- 月份标签（在轴线上方） -->
-            <div class="text-xs text-gray-600 mb-2 font-medium">
-              {month.shortName}
-            </div>
-            
-            <!-- 月份节点和垂直线 -->
-            <div class="relative">
-              <!-- 垂直指示线 -->
-              <div class="absolute left-1/2 transform -translate-x-1/2 w-px bg-gray-400" style="height: 12px; top: -6px;"></div>
-              
-              <!-- 月份统计（在轴线下方） -->
-              <div class="mt-2 text-center">
-                <div class="text-xs font-bold text-blue-600">{month.count}</div>
+      <!-- 月份节点和标签 -->
+      <div class="relative">
+        {monthlyData.map((month, index) => {
+          // 计算月份在时间轴上的位置
+          const monthPosition = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+          const leftPercentage = (monthPosition / totalDays) * 100;
+          
+          return (
+            <div class="absolute" style={`left: ${leftPercentage}%;`}>
+              <!-- 月份标签（轴线上方） -->
+              <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-700 font-medium whitespace-nowrap">
+                {month.monthName}
               </div>
+              
+              <!-- 垂直线 -->
+              <div class="absolute left-1/2 transform -translate-x-1/2 w-px bg-blue-500 top-2" style="height: 40px;"></div>
+              
+              <!-- 月份文章列表（轴线下方） -->
+              {month.articles.length > 0 && (
+                <div class="absolute top-24 left-1/2 transform -translate-x-1/2" style="min-width: 150px;">
+                  <div class="text-center space-y-1">
+                    {month.articles.map((article, articleIndex) => (
+                      <div class="text-xs">
+                        <a 
+                          href={article.url} 
+                          class="text-blue-600 hover:text-blue-800 hover:underline block truncate"
+                          title={article.title}
+                          style="max-width: 150px;"
+                        >
+                          {article.title}
+                        </a>
+                        <span class="text-gray-500">({article.day}日)</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       
-      <!-- 文章发布日期点（分布在轴线上） -->
-      <div class="absolute top-16 left-0 right-0" style="height: 1px;">
-        {allActiveDays.map((day, index) => {
-          // 计算日期在时间轴上的位置百分比
-          const startDate = monthlyData[0].date;
-          const endDate = new Date(monthlyData[monthlyData.length - 1].year, monthlyData[monthlyData.length - 1].month, 0);
-          const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+      <!-- 文章发布日期点（在轴线上） -->
+      <div class="absolute top-20 left-0 right-0" style="height: 1px;">
+        {allActiveDays.map((day) => {
+          // 计算具体日期在时间轴上的位置
           const dayPosition = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
           const leftPercentage = (dayPosition / totalDays) * 100;
           
           return (
             <div 
-              class="absolute day-dot w-2 h-2 bg-blue-500 rounded-full cursor-pointer hover:bg-blue-700 hover:scale-150 transition-all transform -translate-y-1/2 -translate-x-1/2"
+              class="absolute day-dot w-2 h-2 bg-blue-500 rounded-full cursor-pointer hover:bg-blue-700 hover:scale-125 transition-all transform -translate-y-1/2 -translate-x-1/2"
               style={`left: ${leftPercentage}%; top: 0;`}
-              data-tooltip-html={`
-                <div class="text-sm font-medium mb-1">${day.formatted}</div>
-                ${day.articles.map(article => 
-                  `<div class="text-xs mb-1">
-                    <a href="${article.url}" class="text-blue-300 hover:text-blue-100 underline" target="_blank">
-                      ${article.title}
-                    </a>
-                    <span class="text-gray-400 ml-1">[${article.type}]</span>
-                  </div>`
-                ).join('')}
-              `}
+              title={`${day.formatted}: ${day.articles.map(a => a.title).join(', ')}`}
             ></div>
           );
         })}
@@ -171,18 +186,14 @@ allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
   <div class="mt-6 flex items-center justify-center text-xs text-gray-500">
     <div class="flex items-center space-x-6">
       <div class="flex items-center">
-        <div class="w-px h-3 bg-gray-400 mr-2"></div>
-        <span>月份节点</span>
+        <div class="w-px h-4 bg-blue-500 mr-2"></div>
+        <span>月份标记</span>
       </div>
       <div class="flex items-center">
         <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-        <span>文章发布日 (hover查看链接)</span>
+        <span>文章发布日期</span>
       </div>
     </div>
-  </div>
-
-  <!-- Tooltip -->
-  <div id="tooltip" class="absolute bg-gray-900 text-white text-xs rounded-lg py-2 px-3 pointer-events-none opacity-0 transition-opacity z-50 shadow-lg max-w-xs">
   </div>
 </div>
 
@@ -228,64 +239,12 @@ allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
     background: #94a3b8;
   }
 
-  /* Tooltip 内的链接样式 */
-  #tooltip a {
-    color: #93c5fd;
-    text-decoration: underline;
-  }
-  
-  #tooltip a:hover {
-    color: #dbeafe;
+  /* 文章链接样式 */
+  .timeline-track a {
+    display: block;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const tooltip = document.getElementById('tooltip');
-    const dayDots = document.querySelectorAll('.day-dot');
-    
-    dayDots.forEach(dot => {
-      dot.addEventListener('mouseenter', function(e) {
-        const tooltipHtml = this.getAttribute('data-tooltip-html');
-        if (tooltipHtml && tooltip) {
-          tooltip.innerHTML = tooltipHtml;
-          tooltip.style.opacity = '1';
-          
-          // 计算位置，避免超出屏幕
-          const rect = this.getBoundingClientRect();
-          const tooltipRect = tooltip.getBoundingClientRect();
-          
-          let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
-          let top = rect.top - tooltip.offsetHeight - 10;
-          
-          // 防止超出左边界
-          if (left < 10) {
-            left = 10;
-          }
-          
-          // 防止超出右边界
-          if (left + tooltip.offsetWidth > window.innerWidth - 10) {
-            left = window.innerWidth - tooltip.offsetWidth - 10;
-          }
-          
-          // 防止超出上边界，如果上方空间不够就显示在下方
-          if (top < 10) {
-            top = rect.bottom + 10;
-          }
-          
-          tooltip.style.left = left + 'px';
-          tooltip.style.top = top + 'px';
-        }
-      });
-      
-      dot.addEventListener('mouseleave', function() {
-        if (tooltip) {
-          tooltip.style.opacity = '0';
-          setTimeout(() => {
-            tooltip.innerHTML = '';
-          }, 300);
-        }
-      });
-    });
-  });
-</script>
