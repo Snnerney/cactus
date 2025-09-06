@@ -106,19 +106,18 @@ const maxCount = Math.max(...monthlyData.map(m => m.count), ...allActiveDays.map
 <div class="timeline-container">
   <!-- 时间轴标题 -->
   <div class="mb-6">
-    <h2 class="text-lg font-semibold mb-2 text-gray-800">写作时间轴</h2>
-    <p class="text-sm text-gray-600">过去一年的创作记录</p>
+    <p class="text-sm text-gray-600">Time Line</p>
   </div>
 
   <!-- 横向时间轴 -->
   <div class="timeline-horizontal overflow-x-auto pb-4">
-    <div class="timeline-track relative" style="min-width: 1400px; height: 200px;">
+    <div class="timeline-track relative" style="min-width: 900px; height: 120px;">
       <!-- 主轴线 -->
-      <div class="absolute bottom-16 left-0 right-0 h-px bg-gray-400"></div>
+      <div class="absolute bottom-10 left-0 right-0 h-px bg-gray-400"></div>
       
       <!-- 月份标签（在轴线下方） -->
       <div class="absolute bottom-0 left-0 right-0">
-        <div class="relative flex justify-between">
+        <div class="relative">
           {monthlyData.map((month, index) => {
             const monthPosition = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
             const leftPercentage = (monthPosition / totalDays) * 100;
@@ -134,74 +133,56 @@ const maxCount = Math.max(...monthlyData.map(m => m.count), ...allActiveDays.map
       </div>
       
       <!-- 月份竖线（高度根据文章数量调整） -->
-      <div class="absolute bottom-16 left-0 right-0">
+      <div class="absolute bottom-10 left-0 right-0">
         {monthlyData.map((month) => {
           const monthPosition = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
           const leftPercentage = (monthPosition / totalDays) * 100;
-          const lineHeight = month.count > 0 ? Math.max(20, (month.count / maxCount) * 80) : 8;
+          const lineHeight = month.count > 0 ? Math.max(15, (month.count / maxCount) * 60) : 5;
           
           return (
-            <div class="absolute transform -translate-x-1/2" 
-                 style={`left: ${leftPercentage}%; bottom: 0;`}>
-              <div class="w-1 bg-blue-500" style={`height: ${lineHeight}px;`}></div>
+            <div class="absolute transform -translate-x-1/2 month-line" 
+                 style={`left: ${leftPercentage}%; bottom: 0;`}
+                 data-month-info={`本月发布了 ${month.count} 篇文章`}>
+              <div class="w-1 bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors" 
+                   style={`height: ${lineHeight}px;`}></div>
             </div>
           );
         })}
       </div>
       
       <!-- 日期文章竖线（堆叠显示） -->
-      <div class="absolute bottom-16 left-0 right-0">
+      <div class="absolute bottom-10 left-0 right-0">
         {allActiveDays.map((day) => {
           const dayPosition = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
           const leftPercentage = (dayPosition / totalDays) * 100;
           
           return (
-            <div class="absolute transform -translate-x-1/2" 
+            <div class="absolute transform -translate-x-1/2 day-line-group" 
                  style={`left: ${leftPercentage}%; bottom: 0;`}>
               {/* 为每篇文章创建一个竖线段，堆叠显示 */}
               {day.articles.map((article, index) => (
                 <div 
-                  class="w-0.5 bg-blue-600 cursor-pointer hover:bg-blue-800 transition-colors"
-                  style={`height: 15px; margin-bottom: 1px;`}
-                  title={`${day.formatted}: ${article.title}`}
-                  data-tooltip-html={`
-                    <div class="text-sm font-medium mb-1">${day.formatted}</div>
-                    <div class="text-xs mb-1">
-                      <a href="${article.url}" class="text-blue-300 hover:text-blue-100 underline" target="_blank">
-                        ${article.title}
-                      </a>
-                      <span class="text-gray-400 ml-1">[${article.type}]</span>
-                    </div>
-                  `}
+                  class="w-0.5 bg-blue-600 cursor-pointer hover:bg-blue-800 transition-colors day-article-line"
+                  style={`height: 12px; margin-bottom: 1px;`}
+                  data-article-info={`${day.formatted}: ${article.title}`}
+                  data-article-url={article.url}
+                  data-article-type={article.type}
                 ></div>
               ))}
             </div>
           );
         })}
       </div>
-    </div>
-  </div>
-
-  <!-- 图例说明 -->
-  <div class="mt-6 flex items-center justify-center text-xs text-gray-500">
-    <div class="flex items-center space-x-6">
-      <div class="flex items-center">
-        <div class="w-1 h-6 bg-blue-500 mr-2"></div>
-        <span>月份统计 (高度=文章数)</span>
-      </div>
-      <div class="flex items-center">
-        <div class="flex flex-col items-center mr-2">
-          <div class="w-0.5 h-3 bg-blue-600 mb-px"></div>
-          <div class="w-0.5 h-3 bg-blue-600"></div>
-        </div>
-        <span>堆叠文章 (hover查看详情)</span>
+      
+      <!-- 信息显示区域 -->
+      <div id="info-display" class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 shadow-sm opacity-0 transition-opacity pointer-events-none whitespace-nowrap">
+        <div id="info-content"></div>
+        <div id="info-links" class="mt-1 space-y-1"></div>
       </div>
     </div>
   </div>
 
-  <!-- Tooltip -->
-  <div id="tooltip" class="absolute bg-gray-900 text-white text-xs rounded-lg py-2 px-3 pointer-events-none opacity-0 transition-opacity z-50 shadow-lg max-w-xs">
-  </div>
+  <!-- 删除原来的Tooltip -->
 </div>
 
 <style>
@@ -237,62 +218,110 @@ const maxCount = Math.max(...monthlyData.map(m => m.count), ...allActiveDays.map
     background: #94a3b8;
   }
 
-  /* Tooltip 内的链接样式 */
-  #tooltip a {
-    color: #93c5fd;
+  /* 信息显示区域样式 */
+  #info-display {
+    max-width: 300px;
+    z-index: 50;
+  }
+  
+  #info-links a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  #info-links a:hover {
+    color: #1d4ed8;
     text-decoration: underline;
   }
   
-  #tooltip a:hover {
-    color: #dbeafe;
+  /* 月份线和文章线的悬停效果 */
+  .month-line:hover .w-1 {
+    filter: brightness(1.1);
+  }
+  
+  .day-article-line:hover {
+    filter: brightness(1.2);
+    transform: scaleX(1.5);
+  }
+  
+  .day-line-group:hover .day-article-line {
+    filter: brightness(1.1);
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const tooltip = document.getElementById('tooltip');
-    const interactiveElements = document.querySelectorAll('[data-tooltip-html]');
+    const infoDisplay = document.getElementById('info-display');
+    const infoContent = document.getElementById('info-content');
+    const infoLinks = document.getElementById('info-links');
     
-    interactiveElements.forEach(element => {
-      element.addEventListener('mouseenter', function(e) {
-        const tooltipHtml = this.getAttribute('data-tooltip-html');
-        if (tooltipHtml && tooltip) {
-          tooltip.innerHTML = tooltipHtml;
-          tooltip.style.opacity = '1';
-          
-          // 计算位置，避免超出屏幕
-          const rect = this.getBoundingClientRect();
-          
-          let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
-          let top = rect.top - tooltip.offsetHeight - 10;
-          
-          // 防止超出左边界
-          if (left < 10) {
-            left = 10;
-          }
-          
-          // 防止超出右边界
-          if (left + tooltip.offsetWidth > window.innerWidth - 10) {
-            left = window.innerWidth - tooltip.offsetWidth - 10;
-          }
-          
-          // 防止超出上边界，如果上方空间不够就显示在下方
-          if (top < 10) {
-            top = rect.bottom + 10;
-          }
-          
-          tooltip.style.left = left + 'px';
-          tooltip.style.top = top + 'px';
+    // 月份竖线hover事件
+    const monthLines = document.querySelectorAll('.month-line');
+    monthLines.forEach(line => {
+      line.addEventListener('mouseenter', function() {
+        const monthInfo = this.getAttribute('data-month-info');
+        if (infoDisplay && infoContent) {
+          infoContent.textContent = monthInfo;
+          infoLinks.innerHTML = '';
+          infoDisplay.style.opacity = '1';
         }
       });
       
-      element.addEventListener('mouseleave', function() {
-        if (tooltip) {
-          tooltip.style.opacity = '0';
-          setTimeout(() => {
-            tooltip.innerHTML = '';
-          }, 300);
+      line.addEventListener('mouseleave', function() {
+        if (infoDisplay) {
+          infoDisplay.style.opacity = '0';
         }
+      });
+    });
+    
+    // 日期文章线组hover事件
+    const dayGroups = document.querySelectorAll('.day-line-group');
+    dayGroups.forEach(group => {
+      const articles = group.querySelectorAll('.day-article-line');
+      
+      group.addEventListener('mouseenter', function() {
+        if (articles.length > 0) {
+          const firstArticle = articles[0];
+          const dateInfo = firstArticle.getAttribute('data-article-info').split(':')[0];
+          
+          if (infoDisplay && infoContent && infoLinks) {
+            infoContent.textContent = `${dateInfo}: ${articles.length} 篇文章`;
+            
+            // 显示所有文章链接
+            infoLinks.innerHTML = '';
+            articles.forEach(article => {
+              const title = article.getAttribute('data-article-info').split(': ')[1];
+              const url = article.getAttribute('data-article-url');
+              const type = article.getAttribute('data-article-type');
+              
+              const linkDiv = document.createElement('div');
+              linkDiv.innerHTML = `
+                <a href="${url}" class="text-blue-600 hover:text-blue-800 hover:underline text-xs" target="_blank">
+                  ${title} <span class="text-gray-500">[${type}]</span>
+                </a>
+              `;
+              infoLinks.appendChild(linkDiv);
+            });
+            
+            infoDisplay.style.opacity = '1';
+          }
+        }
+      });
+      
+      group.addEventListener('mouseleave', function() {
+        if (infoDisplay) {
+          infoDisplay.style.opacity = '0';
+        }
+      });
+      
+      // 为每个文章线添加点击事件
+      articles.forEach(article => {
+        article.addEventListener('click', function() {
+          const url = this.getAttribute('data-article-url');
+          if (url) {
+            window.open(url, '_blank');
+          }
+        });
       });
     });
   });
