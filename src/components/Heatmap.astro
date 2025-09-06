@@ -1,0 +1,132 @@
+---
+// GitHub 风格热力图组件
+// props: { data: Record<string, number> }  // key: yyyy-mm-dd, value: count
+interface Props {
+  data: Record<string, number>;
+}
+
+const { data = {} } = Astro.props;
+
+// 生成日期范围
+function getDateRange(start: Date, end: Date): Date[] {
+  const arr = [];
+  let dt = new Date(start);
+  while (dt <= end) {
+    arr.push(new Date(dt));
+    dt.setDate(dt.getDate() + 1);
+  }
+  return arr;
+}
+
+// 获取所有日期
+const allDates = Object.keys(data).map(d => new Date(d));
+const today = new Date();
+const oneYearAgo = new Date(today);
+oneYearAgo.setFullYear(today.getFullYear() - 1);
+
+// 使用过去一年的数据，如果有更早的数据则扩展范围
+const minDate = allDates.length ? 
+  new Date(Math.min(...allDates, oneYearAgo.getTime())) : 
+  oneYearAgo;
+const maxDate = allDates.length ? 
+  new Date(Math.max(...allDates, today.getTime())) : 
+  today;
+
+// 补齐到周日，保证完整周
+const startDate = new Date(minDate);
+startDate.setDate(startDate.getDate() - startDate.getDay());
+
+const endDate = new Date(maxDate);
+endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+
+const days = getDateRange(startDate, endDate);
+const weeks = Math.ceil(days.length / 7);
+
+// 颜色分级
+function getColor(count: number): string {
+  if (!count) return '#ebedf0';
+  if (count >= 5) return '#216e39';
+  if (count >= 3) return '#30a14e';
+  if (count >= 2) return '#40c463';
+  return '#9be9a8';
+}
+
+// 计算总文章数
+const totalCount = Object.values(data).reduce((sum, count) => sum + count, 0);
+---
+
+<div class="heatmap-container">
+  <div class="mb-2 text-sm text-gray-600">
+    过去一年共发布 {totalCount} 篇文章
+  </div>
+  <div class="heatmap-wrapper overflow-x-auto">
+    <svg width={weeks * 14} height={7 * 14 + 20} viewBox={`0 0 ${weeks * 14} ${7 * 14 + 20}`}> 
+      {/* 月份标签 */}
+      {Array.from({length: weeks}).map((_, w) => {
+        const weekStart = days[w * 7];
+        if (!weekStart || weekStart.getDate() > 7) return null;
+        const month = weekStart.toLocaleDateString('zh-CN', { month: 'short' });
+        return (
+          <text x={w * 14} y={10} fontSize="10" fill="#666" textAnchor="start">
+            {month}
+          </text>
+        );
+      })}
+      
+      {/* 热力图方块 */}
+      <g transform="translate(0, 15)">
+        {Array.from({length: weeks}).map((_, w) => (
+          Array.from({length: 7}).map((_, d) => {
+            const idx = w * 7 + d;
+            const date = days[idx];
+            if (!date) return null;
+            const key = date.toISOString().slice(0, 10);
+            const count = data[key] || 0;
+            return (
+              <rect
+                key={`${w}-${d}`}
+                x={w * 14}
+                y={d * 14}
+                width="12" height="12"
+                fill={getColor(count)}
+                rx="2" ry="2"
+                stroke="#fff"
+                strokeWidth="1"
+              >
+                <title>{date.toLocaleDateString('zh-CN')} {count ? `${count} 篇文章` : '无文章'}</title>
+              </rect>
+            );
+          })
+        ))}
+      </g>
+      
+      {/* 星期标签 */}
+      <g transform="translate(-25, 15)">
+        {['日', '一', '二', '三', '四', '五', '六'].map((day, i) => (
+          <text key={day} x="0" y={i * 14 + 9} fontSize="9" fill="#666" textAnchor="middle">
+            {day}
+          </text>
+        ))}
+      </g>
+    </svg>
+  </div>
+  
+  <!-- 颜色图例 -->
+  <div class="mt-2 flex items-center text-xs text-gray-500">
+    <span class="mr-2">少</span>
+    <div class="flex gap-1">
+      <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #ebedf0;"></div>
+      <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #9be9a8;"></div>
+      <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #40c463;"></div>
+      <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #30a14e;"></div>
+      <div class="w-2.5 h-2.5 rounded-sm" style="background-color: #216e39;"></div>
+    </div>
+    <span class="ml-2">多</span>
+  </div>
+</div>
+
+<style>
+  .heatmap-wrapper {
+    padding-left: 30px;
+  }
+</style>

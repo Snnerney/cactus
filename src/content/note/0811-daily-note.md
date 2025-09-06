@@ -27,6 +27,14 @@ publishDate: 2025-08-11T01:28
 
 <img src="https://pub-2922618b298540fba9bd5a8f8500b762.r2.dev/fd5fb0f48255dd4883d87e6c4c124a1e.jpg" alt="fd5fb0f48255dd4883d87e6c4c124a1e" style="zoom:34%;" />
 
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115094839101163&bvid=BV1rBvNzsE7K&cid=31973115923&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+
+update at 09.07
+
+没想到这么长时间的直播居然把回放全部放出来了，标记一处星露谷出现地点；
+
+很喜欢冬天的bgm，能让我的心静下来
+
 ---
 
 好久没玩星露谷了 ~~我好想种地啊wwwwwww~~
