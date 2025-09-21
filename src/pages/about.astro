@@ -1,8 +1,5 @@
 ---
 import PageLayout from "@/layouts/Base.astro";
-import Heatmap from "@/components/Heatmap.astro";
-import Timeline from "@/components/Timeline.astro"; 
-import { getCollection } from "astro:content";
 export const prerender = true;
 
 const meta = {
@@ -10,61 +7,11 @@ const meta = {
     title: "关于",
 };
 
-// 获取数据
-const posts = await getCollection("post", ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-});
-const notes = await getCollection("note", ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-});
-
-const allEntries = [...posts, ...notes];
-const dateCount: Record<string, number> = {};
-
-for (const entry of allEntries) {
-    const publishDate = entry.data.publishDate;
-    if (!publishDate) continue;
-    
-    let dateStr = '';
-    if (publishDate instanceof Date) {
-        dateStr = publishDate.toISOString().slice(0, 10);
-    } else if (typeof publishDate === 'string') {
-        dateStr = new Date(publishDate).toISOString().slice(0, 10);
-    }
-    
-    if (dateStr && !isNaN(new Date(dateStr).getTime())) {
-        dateCount[dateStr] = (dateCount[dateStr] || 0) + 1;
-    }
-}
 ---
 
 <PageLayout meta={meta}>
     <h1 class="title mb-8">关于</h1>
 
-    <!-- 切换按钮 -->
-    <div class="mb-6 flex justify-center">
-        <div class="bg-gray-100 p-1 rounded-lg flex">
-            <button id="show-heatmap" class="px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm">
-                热力图
-            </button>
-            <button id="show-timeline" class="px-4 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-900">
-                时间轴
-            </button>
-        </div>
-    </div>
-
-    <!-- 热力图视图 -->
-    <div id="heatmap-view" class="mb-8">
-        <h2 class="text-lg font-semibold mb-4 text-accent-2">Activity</h2>
-        <Heatmap data={dateCount} />
-    </div>
-
-    <!-- 时间轴视图 -->
-    <div id="timeline-view" class="mb-8 hidden">
-        <Timeline data={dateCount} posts={posts} notes={notes} />
-    </div>
-
-    <!-- 其他内容 -->
     <div class="prose prose-sm prose-cactus max-w-none">
         <p>
             随记是一种自由的写作形式，它不受严格的格式和结构的限制，而是以轻松、随意的方式记录生活中的点滴。无论是对日常琐事的感悟，还是对某个瞬间的思考，随记都能帮助我们捕捉那些容易被遗忘的瞬间。
@@ -84,31 +31,3 @@ for (const entry of allEntries) {
     </div>
 </PageLayout>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const heatmapBtn = document.getElementById('show-heatmap');
-        const timelineBtn = document.getElementById('show-timeline');
-        const heatmapView = document.getElementById('heatmap-view');
-        const timelineView = document.getElementById('timeline-view');
-
-        heatmapBtn.addEventListener('click', function() {
-            heatmapBtn.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-            heatmapBtn.classList.remove('text-gray-500');
-            timelineBtn.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-            timelineBtn.classList.add('text-gray-500');
-            
-            heatmapView.classList.remove('hidden');
-            timelineView.classList.add('hidden');
-        });
-
-        timelineBtn.addEventListener('click', function() {
-            timelineBtn.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-            timelineBtn.classList.remove('text-gray-500');
-            heatmapBtn.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-            heatmapBtn.classList.add('text-gray-500');
-            
-            timelineView.classList.remove('hidden');
-            heatmapView.classList.add('hidden');
-        });
-    });
-</script>
