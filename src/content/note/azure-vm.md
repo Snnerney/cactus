@@ -1,7 +1,7 @@
 ---
 title: Azure 虚拟机
 description: 这是一篇有意思的文章
-publishDate: 2025-03-06
+publishDate: 2025-03-06T19:01
 ---
 > [Microsoft Azure](http://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/microsoft.freeaccountvirtualmachine-linux/resourceGroupId//resourceGroupLocation//dontDiscardJourney~/false/_provisioningContext~/%7B%22initialValues%22%3A%7B%22subscriptionIds%22%3A%5B%2244abf6d9-3a16-4bae-8546-14cc71feb722%22%5D%2C%22resourceGroupNames%22%3A%5B%5D%2C%22locationNames%22%3A%5B%22eastasia%22%5D%7D%2C%22telemetryId%22%3A%225e2a4b3b-b904-4aba-8ee3-dfcd05f5900f%22%2C%22marketplaceItem%22%3A%7B%22categoryIds%22%3A%5B%5D%2C%22id%22%3A%22Microsoft.Portal%22%2C%22itemDisplayName%22%3A%22NoMarketplace%22%2C%22products%22%3A%5B%5D%2C%22version%22%3A%22%22%2C%22productsWithNoPricing%22%3A%5B%5D%2C%22publisherDisplayName%22%3A%22Microsoft.Portal%22%2C%22deploymentName%22%3A%22NoMarketplace%22%2C%22launchingContext%22%3A%7B%22telemetryId%22%3A%225e2a4b3b-b904-4aba-8ee3-dfcd05f5900f%22%2C%22source%22%3A%5B%5D%2C%22galleryItemId%22%3A%22%22%7D%2C%22deploymentTemplateFileUris%22%3A%7B%7D%2C%22uiMetadata%22%3Anull%7D%7D)
 
