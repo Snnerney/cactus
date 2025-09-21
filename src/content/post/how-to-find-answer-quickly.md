@@ -1,7 +1,6 @@
 ---
 title: 如何快速找到需要的资源or解决方案
 description: 如何快速找到答案
-draft: true
 publishDate: 2025-03-30
 ogImage: /social-card.avif
 ---
@@ -32,7 +31,7 @@ ogImage: /social-card.avif
 
 ### 3.AI方面，除了直接在网页提问，还有什么方式呢
 
-调用API，除了各大官方的api（ds、gpt、claude…）还有很多三方的api，譬如字节的火山引擎、Azure（学生认证可获得100刀免费额度，可用于部署ai）、阿里魔搭、硅基流动等等 + prompt
+调用API，除了各大官方的api（ds、gpt、claude…）还有很多三方的api，譬如字节的火山引擎、Azure（学生认证可获得100刀免费额度，可用于部署ai）、阿里魔搭、硅基流动等等 + prompt 
 
 网页端直接发送prompt和调用api设置sys prompt有什么区别呢？
 
