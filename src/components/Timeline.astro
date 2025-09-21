@@ -1,0 +1,287 @@
+---
+interface Props {
+  data: Record<string, number>;
+  posts: any[];
+  notes: any[];
+}
+
+const { data = {}, posts = [], notes = [] } = Astro.props;
+
+// 获取过去 6 个月
+const now = new Date();
+const months = [];
+for (let i = 5; i >= 0; i--) {
+  const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  months.push({
+    date,
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    shortName: `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}`,
+  });
+}
+
+// 获取某天的文章
+function getDayArticles(dateStr: string) {
+  const articles: any[] = [];
+  [...posts, ...notes].forEach((entry) => {
+    const publishDate = entry.data.publishDate;
+    if (!publishDate) return;
+    const entryDate = publishDate instanceof Date ? publishDate : new Date(publishDate);
+    if (entryDate.toISOString().slice(0, 10) === dateStr) {
+      const baseUrl = entry.collection === "post" ? "/posts/" : "/notes/";
+      const slug = entry.slug || entry.id;
+      articles.push({
+        title: entry.data.title || "无标题",
+        type: entry.collection === "post" ? "blog" : "note",
+        url: `${baseUrl}${slug}`,
+      });
+    }
+  });
+  return articles;
+}
+
+// 计算每个月的文章数量
+const monthlyData = months.map((month) => {
+  let count = 0;
+  [...posts, ...notes].forEach((entry) => {
+    const publishDate = entry.data.publishDate;
+    if (!publishDate) return;
+    const entryDate = publishDate instanceof Date ? publishDate : new Date(publishDate);
+    if (entryDate.getFullYear() === month.year && entryDate.getMonth() + 1 === month.month) {
+      count++;
+    }
+  });
+  return { ...month, count };
+});
+
+// 找到最大文章数量，用于计算相对高度
+const maxMonthCount = Math.max(...monthlyData.map(m => m.count), 1);
+
+// 收集所有有文章的日期
+const allActiveDays: any[] = [];
+Object.keys(data).forEach((dateKey) => {
+  if (data[dateKey] > 0) {
+    const date = new Date(dateKey);
+    allActiveDays.push({
+      date,
+      dateKey,
+      count: data[dateKey],
+      articles: getDayArticles(dateKey),
+      formatted: date.toLocaleDateString("zh-CN", { month: "short", day: "numeric" }),
+    });
+  }
+});
+allActiveDays.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+// 时间轴范围
+const startDate = months[0].date;
+const endDate = new Date(months[months.length - 1].year, months[months.length - 1].month, 0);
+const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+---
+
+<div class="timeline-container relative w-full mb-8">
+  <p class="text-sm text-gray-600 mb-4">Time Line</p>
+
+  <div class="timeline-track relative h-[140px] px-4">
+    <!-- 主轴线 -->
+    <div class="absolute bottom-10 left-4 right-4 h-px bg-gray-400"></div>
+
+    <!-- 月份竖线（根据文章数量调整高度） -->
+    <div class="absolute bottom-10 left-4 right-4">
+      {monthlyData.map((month) => {
+        const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const left = (monthPos / totalDays) * 100;
+        const height = month.count > 0 ? Math.max(20, (month.count / maxMonthCount) * 60) : 20;
+        return (
+          <div
+            class="absolute transform -translate-x-1/2 group month-line-group hover:brightness-110"
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%; bottom:0;`}
+            data-month={`${month.year}年${month.month}月`}
+            data-count={month.count}
+          >
+            <div
+              class="w-1 bg-gray-300 hover:bg-gray-400 cursor-pointer transition-colors"
+              style={`height:${height}px`}
+            ></div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- 月份标签 -->
+    <div class="absolute bottom-2 left-4 right-4">
+      {months.map((month) => {
+        const monthPos = (month.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const left = (monthPos / totalDays) * 100;
+        return (
+          <div
+            class="absolute text-xs text-gray-700 font-medium transform -translate-x-1/2"
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%`}
+          >
+            {month.shortName}
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- 每天竖线 -->
+    <div class="absolute bottom-10 left-4 right-4">
+      {allActiveDays.map((day) => {
+        const dayPos = (day.date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        const left = (dayPos / totalDays) * 100;
+        return (
+          <div
+            class="absolute transform -translate-x-1/2 group day-line-group hover:scale-110"
+            style={`left:${Math.max(0.5, Math.min(99.5, left))}%; bottom:0;`}
+            data-date={day.formatted}
+          >
+            {day.articles.map((article) => (
+              <div
+                class="w-0.5 bg-blue-600 hover:bg-blue-800 cursor-pointer transition-colors"
+                style="height:14px; margin-bottom:1px;"
+                data-title={article.title}
+                data-url={article.url}
+                data-type={article.type}
+              ></div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- hover 浮层 -->
+    <div
+      id="info-display"
+      class="absolute bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 shadow-md opacity-0 pointer-events-none transition-opacity whitespace-nowrap z-50"
+    >
+      <div id="info-date" class="font-medium mb-1"></div>
+      <div id="info-links" class="space-y-1"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #info-display {
+    max-width: 300px;
+    z-index: 50;
+  }
+  #info-links a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  #info-links a:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+  }
+  
+  .month-line-group:hover {
+    filter: brightness(1.1);
+  }
+  
+  .day-line-group:hover {
+    transform: translateX(-50%) scale(1.1);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const infoDisplay = document.getElementById("info-display");
+    const infoDate = document.getElementById("info-date");
+    const infoLinks = document.getElementById("info-links");
+
+    let hoverTarget = null;
+    let hideTimer = null;
+
+    function showTooltip(element, e, isMonth = false) {
+      if (isMonth) {
+        const month = element.getAttribute("data-month");
+        const count = element.getAttribute("data-count");
+        infoDate.textContent = `${month}：${count} 篇文章`;
+        infoLinks.innerHTML = "";
+      } else {
+        const date = element.getAttribute("data-date");
+        const articles = element.querySelectorAll("div[data-title]");
+        if (!articles.length) return;
+
+        infoDate.textContent = `${date}：${articles.length} 篇文章`;
+        infoLinks.innerHTML = "";
+        articles.forEach((article) => {
+          const title = article.getAttribute("data-title");
+          const url = article.getAttribute("data-url");
+          const type = article.getAttribute("data-type");
+          const link = document.createElement("a");
+          link.href = url;
+          link.target = "_blank";
+          link.className = "block text-xs hover:text-blue-800";
+          link.innerHTML = `${title} <span class="text-gray-500">[${type}]</span>`;
+          infoLinks.appendChild(link);
+        });
+      }
+
+      const rect = element.getBoundingClientRect();
+      const parentRect = element.closest(".timeline-track").getBoundingClientRect();
+
+      // 计算tooltip位置，始终显示在时间轴下方，居中对齐
+      let left = rect.left - parentRect.left + (rect.width / 2);
+      let top = rect.bottom - parentRect.top + 8; // 始终显示在元素下方
+      
+      // 调整水平位置，确保居中且不超出容器
+      const displayWidth = infoDisplay.offsetWidth || 200;
+      
+      // 居中对齐tooltip
+      left = left - (displayWidth / 2);
+      
+      // 边界检查
+      if (left + displayWidth > parentRect.width - 20) {
+        left = parentRect.width - displayWidth - 20;
+      }
+      if (left < 20) left = 20;
+
+      infoDisplay.style.left = left + "px";
+      infoDisplay.style.top = top + "px";
+      infoDisplay.style.opacity = "1";
+      infoDisplay.style.pointerEvents = "auto";
+    }
+
+    function hideTooltip() {
+      infoDisplay.style.opacity = "0";
+      infoDisplay.style.pointerEvents = "none";
+    }
+
+    // 月份线hover事件
+    document.querySelectorAll(".month-line-group").forEach((group) => {
+      group.addEventListener("mouseenter", (e) => {
+        clearTimeout(hideTimer);
+        hoverTarget = group;
+        showTooltip(group, e, true);
+      });
+      group.addEventListener("mouseleave", () => {
+        hideTimer = setTimeout(() => {
+          if (hoverTarget === group) hideTooltip();
+        }, 150);
+      });
+    });
+
+    // 日期线hover事件
+    document.querySelectorAll(".day-line-group").forEach((group) => {
+      group.addEventListener("mouseenter", (e) => {
+        clearTimeout(hideTimer);
+        hoverTarget = group;
+        showTooltip(group, e, false);
+      });
+      group.addEventListener("mouseleave", () => {
+        hideTimer = setTimeout(() => {
+          if (hoverTarget === group) hideTooltip();
+        }, 150);
+      });
+    });
+
+    // tooltip自身hover事件，保持显示
+    infoDisplay.addEventListener("mouseenter", () => {
+      clearTimeout(hideTimer);
+    });
+    infoDisplay.addEventListener("mouseleave", () => {
+      hideTimer = setTimeout(hideTooltip, 150);
+    });
+  });
+</script>
