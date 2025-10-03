@@ -1,33 +1,170 @@
 ---
 import PageLayout from "@/layouts/Base.astro";
+import SimpleTimeline from "@/components/SimpleTimeline.astro";
+
 export const prerender = true;
 
 const meta = {
-    description: "仙人掌主题",
-    title: "关于",
+	description: "仙人掌主题",
+	title: "关于",
 };
 
+const mediaItems = [
+	{
+		title: "四叠半时光机布鲁斯",
+		imageUrl: "https://neodb.social/m/book/2022/03/16e4432b30-29bd-4803-a25d-b264d949cff4.jpg",
+		date: "2025.07",
+		neodbUrl: "https://neodb.social/book/5S4M8y8ESWL4UKqzj58vEc",
+	},
+	{
+		title: "四叠半神话大系",
+		imageUrl: "https://neodb.social/m/book/2021/09/16ad9e5ea2-02f7-4e32-9f5f-3b26bc509ce8.jpg",
+		date: "2025.07",
+		neodbUrl: "https://neodb.social/book/1yrEPnsvG8zEzYuTolPsNf",
+	},
+	{
+		title: "重启人生",
+		imageUrl:
+			"https://neodb.social/m/item/tmdb_tv/2023/03/16/849a0dd4-3aae-483c-b997-cd9c64c3b885.jpg",
+		date: "2024.12",
+		neodbUrl: "https://neodb.social/tv/season/1S57vPKebIMzQHpWbecjf8",
+	},
+	{
+		title: "normal people",
+		imageUrl: "https://neodb.social/m/movie/2021/09/15a6fe15b8-4eae-4763-85a0-e7b8b2c2389e.jpg",
+		date: "2023.09",
+		neodbUrl: "https://neodb.social/tv/season/2WIZys2YNwh3ocV9igakgH",
+	},
+	{
+		title: "Stardew Valley",
+		imageUrl:
+			"https://neodb.social/m/item/game/2024/12/20/2a53f405-bf32-44c7-8c91-1e91d7345720.jpg",
+		date: "2023.08",
+		neodbUrl: "https://neodb.social/game/20NJSQLswiorrvgSaEx9s5",
+	},
+	{
+		title: "强风吹拂",
+		imageUrl: "https://neodb.social/m/movie/2021/09/152ee1d70a-2d8c-4bcf-a957-c89ab73d6a8a.jpg",
+		date: "2024.12.10",
+		neodbUrl: "https://neodb.social/tv/season/5UxdZ3fhCwUYMQl1sesHy4",
+	},
+	{
+		title: "东方夜雀食堂",
+		imageUrl:
+			"https://neodb.social/m/item/doubangame/2024/07/16/1a9ba002-f049-4d58-8b1c-69852155434a.jpg",
+		date: "2023.08",
+		neodbUrl: "https://neodb.social/game/3EWkr83hMO6N1DM55dpK8A",
+	},
+	{
+		title: "厨房",
+		imageUrl: "https://neodb.social/m/book/2021/09/16f7cb7400-d5aa-48d8-9dbe-246402d05197.jpg",
+		date: "2022.10",
+		neodbUrl: "https://neodb.social/book/3RAHpnALm02rPnEFtDbaM9",
+	},
+	{
+		title: "Wonder",
+		imageUrl: "https://neodb.social/m/book/2021/09/15ddf8a3de-ca5a-43d0-b25e-77b4b5d9dc43.jpg",
+		date: "2022.10",
+		neodbUrl: "https://neodb.social/book/5VtPSDpOlrzpn91YkHSmqL",
+	},
+	{
+		title: "头脑特工队2",
+		imageUrl:
+			"https://neodb.social/m/item/tmdb_movie/2024/06/01/7c2832d4-c11c-4c5b-af5f-8aa23862b059.jpg",
+		date: "2024.07",
+		neodbUrl: "https://neodb.social/movie/0xZcGGJePwlBWatISaP2o2",
+	},
+	{
+		title: "大理寺日志 1&2",
+		imageUrl: "https://neodb.social/m/movie/2021/09/16240fc1cc-7d99-4397-8473-1a66af115c99.jpg",
+		date: "2022.10",
+		neodbUrl: "https://neodb.social/tv/season/4KkfFJULbA4xY3DrP6vMmZ",
+	},
+	{
+		title: "士兵突击",
+		imageUrl: "https://neodb.social/m/book/2021/10/2235b5cf3e-9303-43d9-a622-75245a16a5ad.jpg",
+		date: "2023.08",
+		neodbUrl: "https://neodb.social/book/59uZROentsivkpxOg3Axr3",
+	},
+    {
+        title: "哪吒之魔童闹海",
+        date: "2025.02",
+        imageUrl: "https://neodb.social/m/item/doubanmovie/2025/02/02/d801edae-d1f3-499d-8a73-123ce9669780.jpg",
+        neodbUrl: "https://neodb.social/movie/5rY5DKPMHaFH8SNBI0y0Mb",
+    },
+    {
+		title: "我的团长我的团",
+		imageUrl: "https://neodb.social/m/movie/2021/09/150db85db1-546c-4e11-8d69-f2c68c8ca775.jpg",
+		date: "2023.08",
+		neodbUrl: "https://neodb.social/tv/season/4vd31KxigEYkBpAtBc0SFC",
+	},
+    {
+        title: "灵笼2",
+        date: "2025.06",
+        imageUrl: "https://neodb.social/m/item/doubanmovie/2024/03/25/5de5aad1-7477-47b2-99ee-d10162bb2af2.webp",
+        neodbUrl: "https://neodb.social/tv/season/6HBkGRTvqrik3cgp9Of7mg"
+    },
+    {
+        title: "春宵苦短，少女前进吧",
+        date: "2023.01",
+        imageUrl: "https://neodb.social/m/movie/2021/09/1530de516b-03ac-4301-86dc-9d28ba5af3fc.jpg",
+        neodbUrl: "https://neodb.social/movie/6cDZwOtvGwKV2ywEkPvuMW"
+    },
+    {
+        title: "伍六七 s1-5",
+        date: "2023.01",
+        imageUrl: "https://neodb.social/m/movie/2021/09/15008fc341-54ef-46a7-adc7-55ed91013be3.jpg",
+        neodbUrl: "https://neodb.social/tv/season/7LExGlZfCwHMlmXjcSqUbt"
+    },
+    {
+        title: "跃动青春",
+        date: "2023.03",
+        imageUrl: "https://neodb.social/m/item/doubanmovie/2023/04/07/e18f92b0-ef46-49eb-a13f-4e2a464f4aa0.jpg",
+        neodbUrl: "https://neodb.social/tv/season/0sWXm2GiFeloQMB1I633Up"
+    },
+    {
+        title: "一人之下 s1-5",
+        date: "2023.06",
+        imageUrl: "https://neodb.social/m/movie/2021/09/15408aab80-1cbe-4c04-9ec8-cb5853089e60.jpg",
+        neodbUrl: "https://neodb.social/tv/season/00kl6r6zI0nSCiMzjQe2Ue"
+    },
+    {
+        title: "风骚律师 s1-6",
+        date: "2024.12",
+        imageUrl: "https://neodb.social/m/movie/2021/09/157c3aff68-5d75-4cfc-90e1-58da1522314c.jpg",
+        neodbUrl: "https://neodb.social/tv/season/7M4sXiRgZNno6fBI6svUCM"
+    },
+    {
+        title: "凸变英雄",
+        date: "2023.06",
+        imageUrl: "https://neodb.social/m/movie/2021/09/168ce3612d-d801-4b78-be9f-2849e0c29a63.jpg",
+        neodbUrl: "https://neodb.social/tv/season/42BtAvT4AoiEWGOXPxInv6"
+    },
+    {
+        title: "阿弥晚安",
+        date: "2022.06",
+        imageUrl: "https://image.xyzcdn.net/FtZskCvJDuIU64W9q8RkZhLciwki.png@small",
+        neodbUrl: "https://www.xiaoyuzhoufm.com/podcast/6159297f8b734da17cbfe472"
+    },
+    {
+        title: "百妖谱",
+        date: "2024.05",
+        imageUrl: "https://neodb.social/m/item/bangumi/2025/08/26/7de5b5dd-642f-4c17-baf1-ab64d0e67120.jpg",
+        neodbUrl: "https://neodb.social/tv/season/42LDzW7rDnqW4VbFegHRSY"
+    }
+];
 ---
 
 <PageLayout meta={meta}>
-    <h1 class="title mb-8">关于</h1>
+	<h1 class="title mb-8">About me</h1>
 
-    <div class="prose prose-sm prose-cactus max-w-none">
-        <p>
-            随记是一种自由的写作形式，它不受严格的格式和结构的限制，而是以轻松、随意的方式记录生活中的点滴。无论是对日常琐事的感悟，还是对某个瞬间的思考，随记都能帮助我们捕捉那些容易被遗忘的瞬间。
-        </p>
-        <p>
-            在这里，你可以找到我对生活的观察、对世界的思考，以及对未来的期待。每一篇随记都是一次心灵的旅程，记录着我在某个时刻的所思所感。
-        </p>
-        <p>
-            博客是一种系统化的记录方式，它帮助我们将学习到的知识、阅读的书籍等内容进行整理和总结。通过博客，我们可以更好地理解所学的内容，并将其转化为自己的知识储备。
-        </p>
-        <p>
-            在这个页面中，你会看到我对技术、书籍、文章等的摘录和思考。每一篇博客都是一次知识的积累，记录着我在学习过程中的收获与感悟。
-        </p>
-        <p>
-            随记与博客，一个记录生活，一个记录知识。它们是我与世界对话的方式，也是我与自己对话的桥梁。希望这些文字能够带给你一些启发，或者至少让你感受到一丝共鸣。
-        </p>
-    </div>
+	<div class="prose prose-sm prose-cactus max-w-none">
+		<p>学生，什么都喜欢折腾一点</p>
+		<li><a href="https://my.windblow.me">moments-v2 碎碎念于此 <del>更得比blog勤快很多</del></a></li>
+	</div>
+	<br />
+	<div class="mb-12">
+        <li>书游影音 - 记录大学里我看过 听过 玩过 的点滴，现在暂时只是一个list空壳，也许后面会将url指向对应的日志观感notes <del>不过我现在一篇也没写 </del> |ू･ω･` )</li>
+		<SimpleTimeline title="" items={mediaItems} showTabs={true} activeTab="All" />
+	</div>
 </PageLayout>
-
