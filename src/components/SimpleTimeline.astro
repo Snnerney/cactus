@@ -1,0 +1,211 @@
+---
+import SimpleMediaCard from './SimpleMediaCard.astro';
+
+export interface SimpleMediaItem {
+    title: string;
+    imageUrl: string;
+    neodbUrl: string;
+    date: string; // YYYY.MM.DD 或 YYYY.MM 格式
+}
+
+export interface Props {
+    title?: string;
+    items: SimpleMediaItem[];
+    showTabs?: boolean;
+    activeTab?: string;
+}
+
+const { 
+    title = "我的收藏",
+    items = [],
+    showTabs = true,
+    activeTab = "All"
+} = Astro.props;
+
+// 按月份分组项目
+const groupedByMonth = items.reduce((acc, item) => {
+    const monthKey = item.date.substring(0, 7); // "YYYY.MM"
+    if (!acc[monthKey]) {
+        acc[monthKey] = [];
+    }
+    acc[monthKey].push(item);
+    return acc;
+}, {} as Record<string, SimpleMediaItem[]>);
+
+// 按时间倒序排列月份
+const sortedMonths = Object.keys(groupedByMonth).sort((a, b) => b.localeCompare(a));
+
+// 获取类型函数
+function getTypeFromUrl(url: string): string {
+    if (url.includes('/book/') || url.includes('douban.com/book/')) return 'book';
+    if (url.includes('/movie/') || url.includes('douban.com/movie/')) return 'movie';
+    if (url.includes('/tv/') || url.includes('/series/')) return 'tv';
+    if (url.includes('/game/')) return 'game';
+    if (url.includes('/music/') || url.includes('/album/')) return 'music';
+    if (url.includes('/podcast/')) return 'podcast';
+    return 'other';
+}
+
+// 按类型预先分组并按月份整理
+const allTypes = ['All', 'Movie', 'TV', 'Book', 'Game', 'Music', 'Podcast'];
+const typeGroupsWithMonths: Record<string, Record<string, SimpleMediaItem[]>> = {};
+
+allTypes.forEach(type => {
+    let typeItems: SimpleMediaItem[] = [];
+    
+    if (type === 'All') {
+        typeItems = items;
+    } else {
+        typeItems = items.filter(item => {
+            const itemType = getTypeFromUrl(item.neodbUrl);
+            return itemType === type.toLowerCase();
+        });
+    }
+    
+    // 为每个类型按月份分组
+    const monthGroups = typeItems.reduce((acc, item) => {
+        const monthKey = item.date.substring(0, 7);
+        if (!acc[monthKey]) {
+            acc[monthKey] = [];
+        }
+        acc[monthKey].push(item);
+        return acc;
+    }, {} as Record<string, SimpleMediaItem[]>);
+    
+    typeGroupsWithMonths[type] = monthGroups;
+});
+
+// 获取有内容的标签页
+const availableTabs = allTypes.filter(tab => {
+    const monthKeys = Object.keys(typeGroupsWithMonths[tab] || {});
+    return monthKeys.length > 0;
+});
+
+// 格式化月份显示
+function formatMonth(monthKey: string): string {
+    const [year, month] = monthKey.split('.');
+    return `${year}年${month}月`;
+}
+---
+
+<div class="simple-timeline-container">
+    {title && <h2 class="text-2xl font-bold mb-6">{title}</h2>}
+    
+    <!-- 标签页导航 -->
+    {showTabs && availableTabs.length > 1 && (
+        <div class="tab-navigation mb-8">
+                {availableTabs.map(tab => {
+                    const monthKeys = Object.keys(typeGroupsWithMonths[tab] || {});
+                    const itemCount = monthKeys.reduce((total, monthKey) => {
+                        return total + (typeGroupsWithMonths[tab][monthKey] || []).length;
+                    }, 0);
+                    const isActive = tab === activeTab;
+                    return (
+                        <button 
+                            class={`tab-button px-4 py-2 text-sm font-medium rounded-md transition-all `}
+                            data-tab={tab}
+                        >
+                            {tab}
+                            {tab !== 'All' && (
+                                <span class="ml-1 text-xs opacity-60">({itemCount})</span>
+                            )}
+                        </button>
+                    );
+                })}
+        </div>
+    )}
+    
+    <!-- 内容区域 -->
+    <div>
+        {availableTabs.map(tab => {
+            const monthGroups = typeGroupsWithMonths[tab] || {};
+            const monthKeys = Object.keys(monthGroups).sort((a, b) => b.localeCompare(a));
+            const isActive = tab === activeTab;
+            
+            return (
+                <div class={`tab-content space-y-8 ${isActive ? 'block' : 'hidden'}`} data-tab-content={tab}>
+                    {monthKeys.length > 0 ? (
+                        monthKeys.map(monthKey => (
+                            <section class="month-section">
+                                <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                                    {formatMonth(monthKey)}
+                                </h3>
+                                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                                    {monthGroups[monthKey].map((item) => (
+                                        <SimpleMediaCard
+                                            title={item.title}
+                                            imageUrl={item.imageUrl}
+                                            neodbUrl={item.neodbUrl}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        ))
+                    ) : (
+                        <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                            <div class="text-4xl mb-2">📚</div>
+                            <p>暂无 {tab} 内容</p>
+                        </div>
+                    )}
+                </div>
+            );
+        })}
+    </div>
+    
+    <!-- 空状态 -->
+    {items.length === 0 && (
+        <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+            <div class="text-6xl mb-4">📖</div>
+            <h3 class="text-lg font-medium mb-2">还没有添加任何内容</h3>
+            <p>开始记录你的观影、阅读和游戏之旅吧！</p>
+        </div>
+    )}
+</div>
+
+<style>
+
+    
+    .month-section {
+        @apply border-l-2 border-gray-200 dark:border-gray-700 pl-6 relative;
+    }
+    
+    .month-section::before {
+        content: '';
+        @apply absolute left-0 top-6 w-2 h-2 bg-blue-500 rounded-full transform -translate-x-1/2;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 标签页切换功能
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // 更新按钮状态
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'shadow-sm');
+                btn.classList.add('text-gray-600', 'dark:text-gray-400');
+            });
+            
+            this.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'shadow-sm');
+            this.classList.remove('text-gray-600', 'dark:text-gray-400');
+            
+            // 切换内容
+            tabContents.forEach(content => {
+                const contentTab = content.getAttribute('data-tab-content');
+                if (contentTab === targetTab) {
+                    content.classList.remove('hidden');
+                    content.classList.add('block');
+                } else {
+                    content.classList.add('hidden');
+                    content.classList.remove('block');
+                }
+            });
+        });
+    });
+});
+</script>
