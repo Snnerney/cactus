@@ -43,12 +43,8 @@ export const menuLinks: { path: string; title: string }[] = [
 		title: "随记",
 	},
 	{
-		path: "/link/",
+		path: "/links/",
 		title: "友链",
-	},
-	{
-		path: "/about/",
-		title: "关于",
 	},
 ];
 
