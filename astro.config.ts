@@ -26,6 +26,12 @@ import rehypeKatex from "rehype-katex"; // Render LaTeX with KaTeX
 
 import decapCmsOauth from "astro-decap-cms-oauth";
 
+const enableDecapOauth = Boolean(
+    process.env.OAUTH_GITHUB_CLIENT_ID &&
+    process.env.OAUTH_GITHUB_CLIENT_SECRET &&
+    process.env.OAUTH_GITHUB_REPO_ID
+);
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -33,12 +39,19 @@ export default defineConfig({
     image: {
         domains: ["webmention.io"],
     },
-    integrations: [expressiveCode(expressiveCodeOptions), icon({
-  iconDir: "public/icons", // 修改：指定自定义图标目录 name = svg文件名
-}), tailwind({
-        applyBaseStyles: false,
-        nesting: true,
-		}), sitemap(), mdx(), robotsTxt(), webmanifest({
+    integrations: [
+        expressiveCode(expressiveCodeOptions),
+        icon({
+            iconDir: "public/icons", // 修改：指定自定义图标目录 name = svg文件名
+        }),
+        tailwind({
+            applyBaseStyles: false,
+            nesting: true,
+		}),
+        sitemap(),
+        mdx(),
+        robotsTxt(),
+        webmanifest({
         // See: https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md
         /**
          * required
@@ -77,7 +90,9 @@ export default defineConfig({
             insertThemeColorMeta: false,
             insertManifestLink: false,
         },
-		}), decapCmsOauth()],
+		}),
+		...(enableDecapOauth ? [decapCmsOauth()] : []), // Avoid requiring OAuth secrets locally
+	],
     markdown: {
         rehypePlugins: [
             [

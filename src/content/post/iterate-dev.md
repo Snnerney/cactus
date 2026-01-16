@@ -2,10 +2,12 @@
 title: 迭代开发
 description: 迭代开发&git-usage
 publishDate: 2025-08-10
+draft: true
 tags:
   - study
 ogImage: /social-card.avif
 ---
+
 在实际工作开发项目中，往往采用迭代开发的方式，对于整个项目中不同功能的开发分别进行迭代，而不是堆叠在一堆分支中；
 
 ## 迭代开发的概念
@@ -60,7 +62,7 @@ git branch -vv：查看本地分支与远程分支的关联关系
     git pull origin <your-branch-name>
     ```
 
-    *（例如 `git pull origin main` 或 `git pull origin master`）*
+    _（例如 `git pull origin main` 或 `git pull origin master`）_
 
 2.  **第二步：找到要撤销的 commit**
     使用 `git log` 查看提交历史，找到想要撤销的那个（或多个）commit 的 **commit hash**（那一长串字母和数字）。
@@ -69,7 +71,7 @@ git branch -vv：查看本地分支与远程分支的关联关系
     git log --oneline
     ```
 
-    *您会看到类似这样的列表：*
+    _您会看到类似这样的列表：_
 
     ```
     a83be19 (origin/main, main) 同事B的新功能
@@ -78,7 +80,7 @@ git branch -vv：查看本地分支与远程分支的关联关系
     c3a2b1f 之前的正确代码
     ```
 
-    *在这个例子中，您需要撤销的 commit hash 是 `b4d7a91`。*
+    _在这个例子中，您需要撤销的 commit hash 是 `b4d7a91`。_
 
 3.  **第三步：执行 `git revert`**
     针对要撤销的 commit hash 执行 `revert` 命令。
@@ -87,9 +89,9 @@ git branch -vv：查看本地分支与远程分支的关联关系
     git revert b4d7a91
     ```
 
-      * 执行此命令后，Git 会自动创建一个**新的** commit。
-      * 它可能会弹出一个编辑器（如 Vim），让您为这个“撤销 commit”编写提交信息。默认信息通常是 "Revert '这是您推送的错误代码'"。您直接保存并关闭编辑器即可。
-      * 如果您不想编辑 commit 信息，可以直接使用 `--no-edit` 选项：`git revert b4d7a91 --no-edit`
+    - 执行此命令后，Git 会自动创建一个**新的** commit。
+    - 它可能会弹出一个编辑器（如 Vim），让您为这个“撤销 commit”编写提交信息。默认信息通常是 "Revert '这是您推送的错误代码'"。您直接保存并关闭编辑器即可。
+    - 如果您不想编辑 commit 信息，可以直接使用 `--no-edit` 选项：`git revert b4d7a91 --no-edit`
 
 4.  **第四步：推送“撤销 commit”**
     现在，本地有了一个新的“撤销 commit”。只需要像正常推送代码一样，将这个新 commit 推送到远程仓库。
@@ -100,7 +102,7 @@ git branch -vv：查看本地分支与远程分支的关联关系
 
 **完成！**
 
------
+---
 
 ### 如果您想撤销的是连续的多个 commit
 
@@ -136,7 +138,7 @@ c3a2b1f 之前的正确代码
     git revert b4d7a91^..e9f4c12
     ```
 
-    *（注意 `b4d7a91` 后面的 `^` 符号，这表示“从 C 的父提交开始”，从而确保 C 也被包含在 revert 范围内）*
+    _（注意 `b4d7a91` 后面的 `^` 符号，这表示“从 C 的父提交开始”，从而确保 C 也被包含在 revert 范围内）_
 
     这会为范围内的每个 commit 都创建一个 revert commit。如果您希望将它们合并为一个 commit，可以添加 `-n`（`--no-commit`）标志：
 
@@ -146,18 +148,19 @@ c3a2b1f 之前的正确代码
     git push
     ```
 
------
+---
 
 ### 总结：`revert` vs `reset` (强制推送)
 
-| 操作 | `git revert` (推荐) | `git reset` + `git push --force` (危险) |
-| :--- | :--- | :--- |
-| **原理** | 创建一个“反向”的新 commit 来抵消旧 commit。 | 移动分支指针，丢弃历史 commit。 |
-| **历史记录** | **保留**历史（添加新 commit）。 | **重写/删除**历史。 |
-| **对同事的影响** | **安全**。同事只需 `git pull` 即可。 | **灾难性**。会删除同事已推送的 commit。 |
-| **适用场景** | 已经推送到**共享**分支（如 main, master, develop）。 | 仅在**您自己**的、**未共享**的私有分支上。 |
+| 操作             | `git revert` (推荐)                                  | `git reset` + `git push --force` (危险)    |
+| :--------------- | :--------------------------------------------------- | :----------------------------------------- |
+| **原理**         | 创建一个“反向”的新 commit 来抵消旧 commit。          | 移动分支指针，丢弃历史 commit。            |
+| **历史记录**     | **保留**历史（添加新 commit）。                      | **重写/删除**历史。                        |
+| **对同事的影响** | **安全**。同事只需 `git pull` 即可。                 | **灾难性**。会删除同事已推送的 commit。    |
+| **适用场景**     | 已经推送到**共享**分支（如 main, master, develop）。 | 仅在**您自己**的、**未共享**的私有分支上。 |
 
 您需要我帮您解释如何更精确地查找 commit hash，或者如何处理 revert 时可能出现的冲突吗？
+
 </details>
 
 [进阶部分-掘金小册](http://github.com/lm-rebooter/NuggetsBooklet/tree/master/Git%20%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97)
